@@ -88,6 +88,30 @@ function createAPIRouter(config: Config) {
     res.json(friends);
   });
 
+  router.get("/me/friends/:friendId/hangouts", async (req, res) => {
+    // todo DRY with /me/hangouts, also maybe grab fixes from its todos (n+1 queries problem, join)
+    const friendId = +req.params.friendId;
+    const rawHangouts = await repo.getMyHangouts();
+    const hangouts: Hangout[] = [];
+    for (const hangout of rawHangouts) {
+      const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
+        (row) => row.friend_id,
+      );
+      const friends: Friend[] = [];
+      for (const id of friendIds) {
+        friends.push(await repo.getFriend(id));
+      }
+      hangouts.push({
+        ...hangout,
+        friends,
+      });
+    }
+    const results: Hangout[] = hangouts.filter((hangout) =>
+      hangout.friends.map((friend) => friend.id).includes(friendId),
+    );
+    res.json(hangouts);
+  });
+
   router.post("/me/friends", async (req, res) => {
     const newFriend: NewFriend = req.body;
     await repo.createMyFriend(newFriend);
