@@ -1,5 +1,6 @@
 import { Kysely } from "kysely";
 import { DB } from "./database-types";
+import * as db from "./database-types";
 import { NewFriend, NewHangout } from "shared";
 
 const panduAccountId = 1;
@@ -7,7 +8,7 @@ const panduAccountId = 1;
 export class Repository {
   constructor(private db: Kysely<DB>) {}
 
-  public getMyFriends() {
+  public getMyFriends(): Promise<db.Friend[]> {
     return this.db
       .selectFrom("friend")
       .selectAll()
@@ -15,7 +16,7 @@ export class Repository {
       .execute();
   }
 
-  public getFriend(friendId: number) {
+  public getFriend(friendId: number): Promise<db.Friend> {
     return this.db
       .selectFrom("friend")
       .selectAll()
@@ -33,7 +34,7 @@ export class Repository {
       .execute();
   }
 
-  public getMyHangouts() {
+  public getMyHangouts(): Promise<db.Hangout[]> {
     return this.db
       .selectFrom("hangout")
       .selectAll()
