@@ -1,0 +1,27 @@
+From kysely documentation: <https://kysely.dev/docs/getting-started#types>
+
+  // You should not use the table schema interfaces directly. Instead, you should
+  // use the `Selectable`, `Insertable` and `Updateable` wrappers. These wrappers
+  // make sure that the correct types are used in each operation.
+  //
+  // Most of the time you should trust the type inference and not use explicit
+  // types at all. These types can be useful when typing function arguments.
+  export type Person = Selectable<PersonTable>
+  export type NewPerson = Insertable<PersonTable>
+  export type PersonUpdate = Updateable<PersonTable>
+
+
+
+From a GitHub issue: <https://github.com/RobinBlomberg/kysely-codegen/issues/63#issuecomment-2016753685>
+
+  It would be awesome + in-line with the intended use of Kysely if kysely-codegen exported the selectable insertable and updateable types. Something like this:
+
+  export interface UserTable {
+    id: Generated<string>
+    ...
+  }
+
+  export type User = Selectable<UserTable>
+  export type NewUser = Insertable<UserTable>
+  export type UserUpdate = Updateable<UserTable>
+  This is how we instruct people to structure their types in the docs.

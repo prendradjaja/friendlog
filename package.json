@@ -1,0 +1,22 @@
+{
+  "name": "XX_PROJECT_NAME",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "prepare-husky": "husky",
+    "heroku-postbuild": "npm run build -w client",
+    "noop": "echo nothing"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "workspaces": [
+    "server",
+    "shared",
+    "client"
+  ],
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
+}
