@@ -10,10 +10,34 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>;
 
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
 export interface Account {
   id: Generated<number>;
 }
 
+export interface Friend {
+  id: Generated<number>;
+  name: string;
+  owner_id: number;
+}
+
+export interface FriendHangout {
+  friend_id: number;
+  hangout_id: number;
+}
+
+export interface Hangout {
+  description: string;
+  hangout_date: Timestamp;
+  id: Generated<number>;
+  owner_id: number;
+  title: string;
+}
+
 export interface DB {
   account: Account;
+  friend: Friend;
+  friend_hangout: FriendHangout;
+  hangout: Hangout;
 }
