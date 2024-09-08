@@ -1,10 +1,6 @@
-import { Kysely, PostgresDialect, KyselyConfig } from "kysely";
+import { Kysely, PostgresDialect, KyselyConfig, Compilable } from "kysely";
 import { Pool } from "pg";
 import { DB } from "./raw-database-types";
-
-export interface Compilable {
-  compile: () => { sql: string };
-}
 
 async function main() {
   let makeQueries;
@@ -25,7 +21,7 @@ async function main() {
   for (const query of queries) {
     const compiled = query.compile();
     prettyPrint(compiled.sql);
-    console.log((compiled as any).parameters); // todo Make this typesafe
+    console.log(compiled.parameters);
     console.log();
   }
 }
