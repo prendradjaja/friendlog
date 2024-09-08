@@ -15,7 +15,7 @@ export const devConfig: Config = {
   allowAnyHeaders: true,
   allowAnyMethods: true,
   staticFilesPath: undefined,
-  databaseUrl: "postgres://localhost:5432/XX_DATABASE_NAME",
+  databaseUrl: "postgres://localhost:5432/friendlog",
   useSSLForDatabaseConnection: false,
   fakeNetworkDelay: 100,
 };

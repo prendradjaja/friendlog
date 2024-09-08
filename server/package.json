@@ -5,7 +5,7 @@
   "scripts": {
     "start": "tsx server",
     "dev": "DEV=true tsx watch server",
-    "generate-database-types-local": "DATABASE_URL=postgresql://localhost:5432/XX_DATABASE_NAME kysely-codegen --out-file raw-database-types.ts",
+    "generate-database-types-local": "DATABASE_URL=postgresql://localhost:5432/friendlog kysely-codegen --out-file raw-database-types.ts",
     "migrate-to-latest-local": "DEV=true npx tsx migrate-to-latest.ts",
     "migrate-to-latest-prod": "npx tsx migrate-to-latest.ts",
     "kysely-sandbox": "npx tsx watch kysely-sandbox",
