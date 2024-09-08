@@ -8,6 +8,7 @@ interface Props {
 export function CreateHangout({ onAdd }: Props) {
   const friendsRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
+  const dateRef = useRef<HTMLInputElement>(null);
 
   async function handleAdd() {
     const friends = friendsRef
@@ -15,11 +16,15 @@ export function CreateHangout({ onAdd }: Props) {
       .split(",")
       .map((n) => +n);
     const title = titleRef.current!.value.trim();
+    const hangout_date_string = dateRef.current!.value.trim();
+
     friendsRef.current!.value = "";
     titleRef.current!.value = "";
+    dateRef.current!.value = "";
+
     await api.createMyHangout({
       title,
-      hangout_date: new Date(),
+      hangout_date_string,
       description: "",
       friends,
     });
@@ -31,6 +36,8 @@ export function CreateHangout({ onAdd }: Props) {
       <input ref={friendsRef} placeholder="Friend ids" />
       <br />
       <input ref={titleRef} placeholder="Title" />
+      <br />
+      <input ref={dateRef} placeholder="Date" />
       <br />
       <button onClick={handleAdd}>Add</button>
     </>

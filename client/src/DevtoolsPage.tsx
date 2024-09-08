@@ -22,7 +22,6 @@ export function DevtoolsPage() {
 
   async function loadHangouts() {
     const results = await api.getMyHangouts();
-    console.log(results[0].hangout_date);
     setHangouts(results);
   }
 

@@ -18,8 +18,9 @@ export type Friend = db.Friend;
 export type NewFriend = Pick<db.NewFriend, "name">;
 
 export type NewHangout = Prettify<
-  Omit<db.NewHangout, "owner_id"> & {
+  Omit<db.NewHangout, "owner_id" | "hangout_date"> & {
     friends: number[];
+    hangout_date_string: string;
   }
 >;
 

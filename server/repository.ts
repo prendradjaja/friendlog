@@ -61,12 +61,13 @@ export class Repository {
 
   public async createMyHangout(newHangout: NewHangout) {
     await this.db.transaction().execute(async (trx) => {
-      const { friends, ...newHangoutRow } = newHangout;
+      const { friends, hangout_date_string, ...newHangoutRow } = newHangout;
       const hangout = await trx
         .insertInto("hangout")
         .values([
           {
             ...newHangoutRow,
+            hangout_date: hangout_date_string,
             owner_id: panduAccountId,
           },
         ])
