@@ -20,12 +20,13 @@ export function HomePage() {
   }
 
   async function loadHangouts(friendId?: number) {
-    let getResults;
+    let getResults: () => Promise<Hangout[]>;
     if (friendId === undefined) {
       getResults = api.getMyHangouts;
     } else {
       getResults = () => api.getMyHangoutsWithOneFriend(friendId);
     }
+
     setHangouts([]);
     const results = await getResults();
     console.log(results[0].hangout_date);
