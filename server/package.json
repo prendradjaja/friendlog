@@ -8,7 +8,7 @@
     "generate-database-types-local": "DATABASE_URL=postgresql://localhost:5432/friendlog kysely-codegen --out-file raw-database-types.ts",
     "migrate-to-latest-local": "DEV=true npx tsx migrate-to-latest.ts",
     "migrate-to-latest-prod": "npx tsx migrate-to-latest.ts",
-    "kysely-sandbox": "npx tsx watch kysely-sandbox",
+    "kysely-sandbox": "npx tsx watch kysely-sandbox.runner.ts",
     "typecheck-watch": "tsc --noEmit --watch",
     "format": "cd .. && npm run format",
     "noop": "echo nothing"

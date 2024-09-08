@@ -3,3 +3,5 @@
 !**/
 !*.ts
 !*.tsx
+kysely-sandbox.ts
+kysely-sandbox.example.ts
