@@ -2,7 +2,6 @@ import {
   ExampleMessage,
   MyFriendsResponse,
   NewFriend,
-  MyHangoutsResponse,
   NewHangout,
   Hangout,
 } from "shared";

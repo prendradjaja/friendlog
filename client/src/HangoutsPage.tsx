@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
 import * as api from "./api";
-import { Friend, Hangout } from "shared";
-import { Card, Link, Button, Text } from "@radix-ui/themes";
+import { Hangout } from "shared";
+import { Card, Link, Text } from "@radix-ui/themes";
 import {
   LoaderFunctionArgs,
   Link as RouterLink,
