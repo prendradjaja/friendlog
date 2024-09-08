@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "@radix-ui/themes/styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage } from "./HomePage";
+import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
 import { Theme } from "@radix-ui/themes";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
+    element: <HangoutsPage />,
   },
   {
     path: "/devtools",

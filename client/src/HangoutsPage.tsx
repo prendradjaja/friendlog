@@ -3,9 +3,9 @@ import * as api from "./api";
 import { Friend, Hangout } from "shared";
 import { Card, Link, Button, Text } from "@radix-ui/themes";
 import { Link as RouterLink } from "react-router-dom";
-import StyleWrapper from "./HomePage.styles";
+import StyleWrapper from "./HangoutsPage.styles";
 
-export function HomePage() {
+export function HangoutsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [hangouts, setHangouts] = useState<Hangout[]>([]);
 
