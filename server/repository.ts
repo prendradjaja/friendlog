@@ -69,7 +69,7 @@ export class Repository {
         friend_id,
         hangout_id,
       }));
-      await trx.insertInto("friend_hangout").values(rows);
+      await trx.insertInto("friend_hangout").values(rows).execute();
     });
   }
 }
