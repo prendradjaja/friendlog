@@ -4,6 +4,7 @@ import {
   NewFriend,
   MyHangoutsResponse,
   NewHangout,
+  Hangout,
 } from "shared";
 import { baseUrl } from "./base-url";
 
@@ -37,8 +38,14 @@ export function createMyFriend(newFriend: NewFriend): Promise<{}> {
 }
 
 // todo Date objects turn into strings upon serialization, so the type annotation is incorrect
-export function getMyHangouts(): Promise<MyHangoutsResponse> {
+export function getMyHangouts(): Promise<Hangout[]> {
   return myFetch("/api/me/hangouts");
+}
+
+export function getMyHangoutsWithOneFriend(
+  friendId: number,
+): Promise<Hangout[]> {
+  return myFetch(`/api/me/friends/${friendId}/hangouts`);
 }
 
 export function createMyHangout(newHangout: NewHangout): Promise<{}> {
