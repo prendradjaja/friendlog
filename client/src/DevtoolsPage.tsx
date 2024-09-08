@@ -8,6 +8,8 @@ export function DevtoolsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [hangouts, setHangouts] = useState<Hangout[]>([]);
 
+  const friendsLoaded = friends.length > 0;
+
   const newFriendRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,6 +41,12 @@ export function DevtoolsPage() {
   return (
     <StyleWrapper>
       <div>
+        <h2>Sandbox</h2>
+        <input type="date" />
+      </div>
+
+      <hr />
+      <div>
         <h2>Create friend</h2>
         <input ref={newFriendRef} />
         <button onClick={handleCreateFriend}>Add</button>
@@ -47,7 +55,9 @@ export function DevtoolsPage() {
       <hr />
       <div>
         <h2>Create hangout</h2>
-        <CreateHangout onAdd={handleCreateHangout} />
+        {friendsLoaded && (
+          <CreateHangout onAdd={handleCreateHangout} allFriends={friends} />
+        )}
       </div>
 
       <hr />

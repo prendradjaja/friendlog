@@ -1,24 +1,23 @@
 import { useRef } from "react";
 import * as api from "./api";
+import { Friend } from "shared";
+import { SelectFriends, SelectFriendsHandle } from "./SelectFriends";
 
 interface Props {
   onAdd: () => void;
+  allFriends: Friend[];
 }
 
-export function CreateHangout({ onAdd }: Props) {
-  const friendsRef = useRef<HTMLInputElement>(null);
+export function CreateHangout({ onAdd, allFriends }: Props) {
+  const friendsRef = useRef<SelectFriendsHandle>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
 
   async function handleAdd() {
-    const friends = friendsRef
-      .current!.value.trim()
-      .split(",")
-      .map((n) => +n);
+    const friends = friendsRef.current!.getValue();
     const title = titleRef.current!.value.trim();
     const hangout_date_string = dateRef.current!.value.trim();
 
-    friendsRef.current!.value = "";
     titleRef.current!.value = "";
     dateRef.current!.value = "";
 
@@ -33,7 +32,7 @@ export function CreateHangout({ onAdd }: Props) {
 
   return (
     <>
-      <input ref={friendsRef} placeholder="Friend ids" />
+      <SelectFriends ref={friendsRef} allFriends={allFriends} />
       <br />
       <input ref={titleRef} placeholder="Title" />
       <br />
