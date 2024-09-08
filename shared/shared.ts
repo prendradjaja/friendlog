@@ -7,8 +7,9 @@ export interface ExampleMessage {
 }
 
 export type Hangout = Prettify<
-  db.Hangout & {
+  Omit<db.Hangout, "hangout_date"> & {
     friends: db.Friend[];
+    hangout_date_string: string;
   }
 >;
 

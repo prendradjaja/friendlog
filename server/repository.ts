@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
 import { NewFriend, NewHangout } from "shared";
@@ -34,10 +34,18 @@ export class Repository {
       .execute();
   }
 
-  public getMyHangouts(): Promise<db.Hangout[]> {
+  public getMyHangouts() {
     return this.db
       .selectFrom("hangout")
-      .selectAll()
+      .select([
+        "description",
+        sql<string>`to_char(hangout_date, 'YYYY-MM-DD')`.as(
+          "hangout_date_string",
+        ),
+        "id",
+        "owner_id",
+        "title",
+      ])
       .where("owner_id", "=", panduAccountId)
       .execute();
   }
