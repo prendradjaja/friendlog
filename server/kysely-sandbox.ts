@@ -22,6 +22,7 @@ async function main() {
   for (const query of queries) {
     const compiled = query.compile();
     console.log(compiled.sql);
+    console.log((compiled as any).parameters); // todo Make this typesafe
     console.log();
   }
 }
