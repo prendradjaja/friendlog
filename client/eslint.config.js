@@ -23,6 +23,9 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+
+      // todo Don't use empty object type, re-enable this rule
+      '@typescript-eslint/no-empty-object-type': 'warn',
     },
   },
 )
