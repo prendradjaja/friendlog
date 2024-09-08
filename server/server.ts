@@ -146,26 +146,6 @@ function createAPIRouter(config: Config) {
     res.json({});
   });
 
-  // router.get("/me/hangouts", async (req, res) => {
-  //   const results: Hangout[] = [
-  //     {
-  //       title: 'Coffee',
-  //       id: 999,
-  //       owner_id: 999,
-  //       description: '',
-  //       hangout_date: null as any,
-  //       friends: [
-  //         {
-  //           id: 999,
-  //           owner_id: 999,
-  //           name: 'Kunal',
-  //         }
-  //       ],
-  //     },
-  //   ];
-  //   res.json(results);
-  // });
-
   return router;
 }
 
