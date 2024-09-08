@@ -4,7 +4,7 @@ import { Kysely } from "kysely";
 import { DB } from "./database-types";
 import { databaseConfig } from "./database";
 import { Repository } from "./repository";
-import { ExampleMessage } from "shared";
+import { ExampleMessage, Hangout, NewFriend, NewHangout, Friend } from "shared";
 import * as path from "path";
 
 const db = new Kysely<DB>(databaseConfig);
@@ -80,6 +80,67 @@ function createAPIRouter(config: Config) {
       res.status(404).json({});
     }
   });
+
+  // todo Error handling for all the endpoints
+
+  router.get("/me/friends", async (req, res) => {
+    const friends = await repo.getMyFriends();
+    res.json(friends);
+  });
+
+  router.post("/me/friends", async (req, res) => {
+    const newFriend: NewFriend = req.body;
+    await repo.createMyFriend(newFriend);
+    res.json({});
+  });
+
+  router.get("/me/hangouts", async (req, res) => {
+    // todo This is the n+1 queries problem -- fix
+    // todo Getting friends also doesn't need to be separate from getting friend ids probably (join?)
+    const rawHangouts = await repo.getMyHangouts();
+    const hangouts: Hangout[] = [];
+    for (const hangout of rawHangouts) {
+      const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
+        (row) => row.friend_id,
+      );
+      const friends: Friend[] = [];
+      for (const id of friendIds) {
+        friends.push(await repo.getFriend(id));
+      }
+      hangouts.push({
+        ...hangout,
+        friends,
+      });
+    }
+    const results: Hangout[] = hangouts;
+    res.json(hangouts);
+  });
+
+  router.post("/me/hangouts", async (req, res) => {
+    const newHangout: NewHangout = req.body;
+    await repo.createMyHangout(newHangout);
+    res.json({});
+  });
+
+  // router.get("/me/hangouts", async (req, res) => {
+  //   const results: Hangout[] = [
+  //     {
+  //       title: 'Coffee',
+  //       id: 999,
+  //       owner_id: 999,
+  //       description: '',
+  //       hangout_date: null as any,
+  //       friends: [
+  //         {
+  //           id: 999,
+  //           owner_id: 999,
+  //           name: 'Kunal',
+  //         }
+  //       ],
+  //     },
+  //   ];
+  //   res.json(results);
+  // });
 
   return router;
 }
