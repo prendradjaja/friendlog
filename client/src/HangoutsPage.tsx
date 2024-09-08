@@ -41,6 +41,9 @@ export function HangoutsPage() {
               </>
             ))}
           </div>
+          <Text as="div" size="2" color="gray">
+            {hangout.hangout_date_string}
+          </Text>
           <Text as="div">{hangout.title}</Text>
         </Card>
       ))}
