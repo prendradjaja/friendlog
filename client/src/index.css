@@ -1,4 +1,14 @@
 body {
-  margin: 0;
+  margin: 10px;
   font-family: sans-serif;
+  background: hsl(0 0 10);
+  color: white;
+}
+
+* {
+  font-size: 20px;
+}
+
+a {
+  color: white;
 }
