@@ -109,7 +109,7 @@ function createAPIRouter(config: Config) {
     const results: Hangout[] = hangouts.filter((hangout) =>
       hangout.friends.map((friend) => friend.id).includes(friendId),
     );
-    res.json(hangouts);
+    res.json(results);
   });
 
   router.post("/me/friends", async (req, res) => {
