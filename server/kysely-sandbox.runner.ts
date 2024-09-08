@@ -24,9 +24,27 @@ async function main() {
 
   for (const query of queries) {
     const compiled = query.compile();
-    console.log(compiled.sql);
+    prettyPrint(compiled.sql);
     console.log((compiled as any).parameters); // todo Make this typesafe
     console.log();
+  }
+}
+
+function prettyPrint(sql: string): void {
+  sql = sql.replaceAll("(", "(\n");
+  sql = sql.replaceAll(")", "\n)");
+  sql = sql.replaceAll(", ", ",\n");
+
+  let indentLevel = 0;
+  for (const line of sql.split("\n")) {
+    if (line.includes(")")) {
+      indentLevel--;
+    }
+    const indent = "  ".repeat(indentLevel);
+    console.log(indent + line);
+    if (line.includes("(")) {
+      indentLevel++;
+    }
   }
 }
 
