@@ -13,6 +13,7 @@ export class Repository {
       .selectFrom("friend")
       .selectAll()
       .where("owner_id", "=", panduAccountId)
+      .orderBy("name asc")
       .execute();
   }
 
