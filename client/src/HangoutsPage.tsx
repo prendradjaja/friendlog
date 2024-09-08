@@ -2,42 +2,25 @@ import { useState, useEffect, useRef } from "react";
 import * as api from "./api";
 import { Friend, Hangout } from "shared";
 import { Card, Link, Button, Text } from "@radix-ui/themes";
-import { Link as RouterLink } from "react-router-dom";
+import {
+  LoaderFunctionArgs,
+  Link as RouterLink,
+  useLoaderData,
+} from "react-router-dom";
 import StyleWrapper from "./HangoutsPage.styles";
 
+interface LoaderData {
+  hangouts: Hangout[];
+}
+
 export function HangoutsPage() {
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [hangouts, setHangouts] = useState<Hangout[]>([]);
-
-  useEffect(() => {
-    loadFriends();
-    loadHangouts();
-  }, []);
-
-  async function loadFriends() {
-    const results = await api.getMyFriends();
-    setFriends(results);
-  }
-
-  async function loadHangouts(friendId?: number) {
-    let getResults: () => Promise<Hangout[]>;
-    if (friendId === undefined) {
-      getResults = api.getMyHangouts;
-    } else {
-      getResults = () => api.getMyHangoutsWithOneFriend(friendId);
-    }
-
-    setHangouts([]);
-    const results = await getResults();
-    console.log(results[0].hangout_date);
-    setHangouts(results);
-  }
+  const { hangouts } = useLoaderData() as LoaderData;
 
   return (
     <StyleWrapper>
       <div className="header">
-        <Link weight="bold" href="#" size="6" onClick={() => loadHangouts()}>
-          Friendlog
+        <Link asChild weight="bold" size="6">
+          <RouterLink to="/">Friendlog</RouterLink>
         </Link>
         <div>
           <Link asChild weight="bold">
@@ -51,7 +34,7 @@ export function HangoutsPage() {
             {hangout.friends.map((friend, i, friends) => (
               <>
                 <Link asChild key={friend.id} weight="bold">
-                  <RouterLink to="#" onClick={() => loadHangouts(friend.id)}>
+                  <RouterLink to={"/friends/" + friend.id}>
                     {friend.name}
                   </RouterLink>
                 </Link>
@@ -65,3 +48,16 @@ export function HangoutsPage() {
     </StyleWrapper>
   );
 }
+
+HangoutsPage.loader = async ({
+  params,
+}: LoaderFunctionArgs): Promise<LoaderData> => {
+  const friendId = params.friendId;
+  if (friendId === undefined) {
+    const hangouts = await api.getMyHangouts();
+    return { hangouts };
+  } else {
+    const hangouts = await api.getMyHangoutsWithOneFriend(+friendId);
+    return { hangouts };
+  }
+};

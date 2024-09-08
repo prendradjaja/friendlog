@@ -11,6 +11,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <HangoutsPage />,
+    loader: HangoutsPage.loader,
+  },
+  {
+    path: "/friends/:friendId",
+    element: <HangoutsPage />,
+    loader: HangoutsPage.loader,
   },
   {
     path: "/devtools",
