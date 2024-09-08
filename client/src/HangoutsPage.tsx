@@ -5,7 +5,10 @@ import {
   LoaderFunctionArgs,
   Link as RouterLink,
   useLoaderData,
+  useNavigate,
 } from "react-router-dom";
+import { IconButton } from "@radix-ui/themes";
+import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
 
 interface LoaderData {
@@ -14,6 +17,11 @@ interface LoaderData {
 
 export function HangoutsPage() {
   const { hangouts } = useLoaderData() as LoaderData;
+  const navigate = useNavigate();
+
+  function handleAddHangout() {
+    navigate("/devtools");
+  }
 
   return (
     <StyleWrapper>
@@ -47,6 +55,19 @@ export function HangoutsPage() {
           <Text as="div">{hangout.title}</Text>
         </Card>
       ))}
+
+      {/* todo Maybe use a link instead of a button. Would have to do it myself: Radix Themes
+      doesn't have such a "link that looks like a button" component. */}
+      {/* todo Maybe make it bigger. Would have to do it myself: This is the max size for the Radix
+      Themes button. */}
+      <IconButton
+        className="floating-action-button"
+        radius="full"
+        size="4"
+        onClick={handleAddHangout}
+      >
+        <PlusIcon width="30" height="30" />
+      </IconButton>
     </StyleWrapper>
   );
 }

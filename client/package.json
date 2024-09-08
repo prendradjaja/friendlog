@@ -14,6 +14,7 @@
     "noop": "echo nothing"
   },
   "dependencies": {
+    "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/themes": "^3.1.3",
     "date-fns": "^3.6.0",
     "react": "^18.3.1",
