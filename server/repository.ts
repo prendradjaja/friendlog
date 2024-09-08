@@ -47,6 +47,7 @@ export class Repository {
         "title",
       ])
       .where("owner_id", "=", panduAccountId)
+      .orderBy(["hangout_date desc", "id desc"])
       .execute();
   }
 
