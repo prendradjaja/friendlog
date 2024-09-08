@@ -36,6 +36,7 @@ export function createMyFriend(newFriend: NewFriend): Promise<{}> {
   });
 }
 
+// todo Date objects turn into strings upon serialization, so the type annotation is incorrect
 export function getMyHangouts(): Promise<MyHangoutsResponse> {
   return myFetch("/api/me/hangouts");
 }
