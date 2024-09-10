@@ -13,6 +13,7 @@ import {
   CreateFriendResponse,
 } from "shared";
 import * as path from "path";
+import morgan from "morgan";
 
 const db = new Kysely<DB>(databaseConfig);
 const repo = new Repository(db);
@@ -29,6 +30,7 @@ function main() {
 
   const app = express();
 
+  app.use(morgan("dev"));
   app.use(express.json());
 
   if (allowAnyOrigin) {
