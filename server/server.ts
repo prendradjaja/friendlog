@@ -4,7 +4,14 @@ import { Kysely } from "kysely";
 import { DB } from "./database-types";
 import { databaseConfig } from "./database";
 import { Repository } from "./repository";
-import { ExampleMessage, Hangout, NewFriend, NewHangout, Friend } from "shared";
+import {
+  ExampleMessage,
+  Hangout,
+  NewFriend,
+  NewHangout,
+  Friend,
+  CreateFriendResponse,
+} from "shared";
 import * as path from "path";
 
 const db = new Kysely<DB>(databaseConfig);
@@ -114,8 +121,11 @@ function createAPIRouter(config: Config) {
 
   router.post("/me/friends", async (req, res) => {
     const newFriend: NewFriend = req.body;
-    await repo.createMyFriend(newFriend);
-    res.json({});
+    const rows = await repo.createMyFriend(newFriend);
+    const result: CreateFriendResponse = {
+      id: rows[0].id,
+    };
+    res.json(result);
   });
 
   router.get("/me/hangouts", async (req, res) => {

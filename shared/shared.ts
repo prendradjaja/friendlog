@@ -26,3 +26,7 @@ export type NewHangout = Prettify<
 
 export type MyFriendsResponse = ReturnType<Repository["getMyFriends"]>;
 export type MyHangoutsResponse = Hangout[];
+
+export interface CreateFriendResponse {
+  id: number;
+}

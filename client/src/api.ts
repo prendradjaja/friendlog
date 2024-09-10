@@ -4,6 +4,7 @@ import {
   NewFriend,
   NewHangout,
   Hangout,
+  CreateFriendResponse,
 } from "shared";
 import { baseUrl } from "./base-url";
 
@@ -26,7 +27,9 @@ export function getMyFriends(): Promise<MyFriendsResponse> {
   return myFetch("/api/me/friends");
 }
 
-export function createMyFriend(newFriend: NewFriend): Promise<{}> {
+export function createMyFriend(
+  newFriend: NewFriend,
+): Promise<CreateFriendResponse> {
   return myFetch("/api/me/friends", {
     method: "POST",
     headers: {

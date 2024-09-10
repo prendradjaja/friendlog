@@ -32,6 +32,7 @@ export class Repository {
         ...newFriend,
         owner_id: panduAccountId,
       })
+      .returning("id")
       .execute();
   }
 
