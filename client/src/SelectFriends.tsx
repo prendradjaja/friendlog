@@ -2,6 +2,7 @@ import { Friend } from "shared";
 import { Button, IconButton } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useState, useImperativeHandle, forwardRef } from "react";
+import StyleWrapper from "./SelectFriends.styles";
 
 interface Props {
   allFriends: Friend[];
@@ -63,7 +64,7 @@ export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
   }
 
   return (
-    <>
+    <StyleWrapper>
       {allFriends.map((friend) => (
         <ToggleFriend
           key={friend.id}
@@ -76,13 +77,13 @@ export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
         <>
           <Button key={name} onClick={() => handleCancelCreate(name)}>
             ({name})
-          </Button>{" "}
+          </Button>
         </>
       ))}
       <IconButton variant="outline" onClick={handleClickAdd}>
         <PlusIcon />
       </IconButton>
-    </>
+    </StyleWrapper>
   );
 });
 
@@ -92,12 +93,11 @@ interface ToggleFriendProps {
   onToggle: () => void;
 }
 
+// todo Maybe inline this component
 function ToggleFriend({ name, selected, onToggle }: ToggleFriendProps) {
   return (
-    <>
-      <Button variant={selected ? "solid" : "outline"} onClick={onToggle}>
-        {name}
-      </Button>{" "}
-    </>
+    <Button variant={selected ? "solid" : "outline"} onClick={onToggle}>
+      {name}
+    </Button>
   );
 }
