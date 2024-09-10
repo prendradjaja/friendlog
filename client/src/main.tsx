@@ -5,6 +5,7 @@ import "@radix-ui/themes/styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
+import { CreateHangoutPage } from "./CreateHangoutPage";
 import { Theme } from "@radix-ui/themes";
 
 const router = createBrowserRouter([
@@ -17,6 +18,11 @@ const router = createBrowserRouter([
     path: "/friends/:friendId",
     element: <HangoutsPage />,
     loader: HangoutsPage.loader,
+  },
+  {
+    path: "/hangouts/new",
+    element: <CreateHangoutPage />,
+    loader: CreateHangoutPage.loader,
   },
   {
     path: "/devtools",

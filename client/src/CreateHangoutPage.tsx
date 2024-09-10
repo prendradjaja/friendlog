@@ -1,22 +1,30 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
 import { Friend } from "shared";
 import { SelectFriends, SelectFriendsHandle } from "./SelectFriends";
 import { format } from "date-fns";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
-interface Props {
-  onAdd: () => void;
+interface LoaderData {
   allFriends: Friend[];
 }
 
-export function CreateHangout({ onAdd, allFriends }: Props) {
+export function CreateHangoutPage() {
+  const { allFriends } = useLoaderData() as LoaderData;
+
   const friendsRef = useRef<SelectFriendsHandle>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
 
   const today = useMemo(getToday, []);
 
+  const [saving, setSaving] = useState(false);
+
+  const navigate = useNavigate();
+
   async function handleAdd() {
+    setSaving(true);
+
     const { friendIds: existingFriendIds, friendNamesToCreate } =
       friendsRef.current!.getValue();
     const title = titleRef.current!.value.trim();
@@ -39,7 +47,7 @@ export function CreateHangout({ onAdd, allFriends }: Props) {
       description: "",
       friends: friendIds,
     });
-    onAdd();
+    navigate("/");
   }
 
   return (
@@ -50,10 +58,17 @@ export function CreateHangout({ onAdd, allFriends }: Props) {
       <br />
       <input ref={dateRef} type="date" defaultValue={today} />
       <br />
-      <button onClick={handleAdd}>Add</button>
+      <button onClick={handleAdd} disabled={saving}>
+        Add
+      </button>
     </>
   );
 }
+
+CreateHangoutPage.loader = async (): Promise<LoaderData> => {
+  const allFriends = await api.getMyFriends();
+  return { allFriends };
+};
 
 function getToday(): string {
   return format(new Date(), "yyyy-MM-dd");

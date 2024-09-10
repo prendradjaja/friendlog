@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import StyleWrapper from "./DevtoolsPage.styles";
 import * as api from "./api";
 import { Friend, Hangout } from "shared";
-import { CreateHangout } from "./CreateHangout";
 
 export function DevtoolsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -34,10 +33,6 @@ export function DevtoolsPage() {
     loadFriends();
   }
 
-  function handleCreateHangout() {
-    loadHangouts();
-  }
-
   return (
     <StyleWrapper>
       <div>
@@ -49,14 +44,6 @@ export function DevtoolsPage() {
         <h2>Create friend</h2>
         <input ref={newFriendRef} />
         <button onClick={handleCreateFriend}>Add</button>
-      </div>
-
-      <hr />
-      <div>
-        <h2>Create hangout</h2>
-        {friendsLoaded && (
-          <CreateHangout onAdd={handleCreateHangout} allFriends={friends} />
-        )}
       </div>
 
       <hr />

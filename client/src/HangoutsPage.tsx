@@ -20,7 +20,7 @@ export function HangoutsPage() {
   const navigate = useNavigate();
 
   function handleAddHangout() {
-    navigate("/devtools");
+    navigate("/hangouts/new");
   }
 
   return (
