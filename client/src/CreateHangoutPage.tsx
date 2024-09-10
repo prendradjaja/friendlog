@@ -4,6 +4,8 @@ import { Friend } from "shared";
 import { SelectFriends, SelectFriendsHandle } from "./SelectFriends";
 import { format } from "date-fns";
 import { useLoaderData, useNavigate } from "react-router-dom";
+import StyleWrapper from "./CreateHangoutPage.styles";
+import { Button, Heading, TextField } from "@radix-ui/themes";
 
 interface LoaderData {
   allFriends: Friend[];
@@ -51,17 +53,30 @@ export function CreateHangoutPage() {
   }
 
   return (
-    <>
+    <StyleWrapper>
+      <Heading as="h1">Create hangout</Heading>
+
+      <Heading as="h2" size="3">
+        Who
+      </Heading>
       <SelectFriends ref={friendsRef} allFriends={allFriends} />
-      <br />
-      <input ref={titleRef} placeholder="Title" />
-      <br />
+
+      <Heading as="h2" size="3">
+        What
+      </Heading>
+      <TextField.Root ref={titleRef} placeholder="e.g. Coffee at Timeless" />
+
+      <Heading as="h2" size="3">
+        When
+      </Heading>
       <input ref={dateRef} type="date" defaultValue={today} />
-      <br />
-      <button onClick={handleAdd} disabled={saving}>
-        Add
-      </button>
-    </>
+
+      <div className="button-container">
+        <Button onClick={handleAdd} disabled={saving}>
+          Add
+        </Button>
+      </div>
+    </StyleWrapper>
   );
 }
 
