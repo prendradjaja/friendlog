@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import StyleWrapper from "./DevtoolsPage.styles";
 import * as api from "./api";
 import { Friend, Hangout } from "shared";
 import { CreateHangout } from "./CreateHangout";
-import { format } from "date-fns";
 
 export function DevtoolsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -12,8 +11,6 @@ export function DevtoolsPage() {
   const friendsLoaded = friends.length > 0;
 
   const newFriendRef = useRef<HTMLInputElement>(null);
-
-  const today = useMemo(getToday, []);
 
   useEffect(() => {
     loadFriends();
@@ -45,7 +42,6 @@ export function DevtoolsPage() {
     <StyleWrapper>
       <div>
         <h2>Sandbox</h2>
-        <input type="date" defaultValue={today} />
       </div>
 
       <hr />
@@ -80,8 +76,4 @@ export function DevtoolsPage() {
       </div>
     </StyleWrapper>
   );
-}
-
-function getToday(): string {
-  return format(new Date(), "yyyy-MM-dd");
 }
