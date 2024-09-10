@@ -10,6 +10,7 @@ import {
 import { IconButton } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
+import * as React from "react";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -39,14 +40,14 @@ export function HangoutsPage() {
         <Card key={hangout.id}>
           <div>
             {hangout.friends.map((friend, i, friends) => (
-              <>
-                <Link asChild key={friend.id} weight="bold">
+              <React.Fragment key={friend.id}>
+                <Link asChild weight="bold">
                   <RouterLink to={"/friends/" + friend.id}>
                     {friend.name}
                   </RouterLink>
                 </Link>
                 {i < friends.length - 1 ? <Text>{", "}</Text> : null}
-              </>
+              </React.Fragment>
             ))}
           </div>
           <Text as="div" size="2" color="gray">
