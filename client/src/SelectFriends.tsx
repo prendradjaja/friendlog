@@ -1,27 +1,39 @@
 import { Friend } from "shared";
-import { Button } from "@radix-ui/themes";
+import { Button, IconButton } from "@radix-ui/themes";
+import { PlusIcon } from "@radix-ui/react-icons";
 import { useState, useImperativeHandle, forwardRef } from "react";
 
 interface Props {
   allFriends: Friend[];
 }
 
+export interface SelectFriendsValue {
+  friendIds: number[];
+  friendNamesToCreate: string[];
+}
+
 export interface SelectFriendsHandle {
-  getValue: () => number[];
+  getValue: () => SelectFriendsValue;
 }
 
 export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
   const [selectedFriends, setSelectedFriends] = useState<number[]>([]);
+  const [friendsToAdd, setFriendsToAdd] = useState<string[]>([]);
 
   useImperativeHandle(ref, () => {
     return {
       getValue() {
-        const result = selectedFriends.slice();
-        result.sort();
-        return result;
+        const friendIds = selectedFriends.slice();
+        friendIds.sort();
+        const friendNamesToCreate = friendsToAdd.slice();
+        friendNamesToCreate.sort();
+        return {
+          friendIds,
+          friendNamesToCreate,
+        };
       },
     } satisfies SelectFriendsHandle;
-  }, [selectedFriends]);
+  }, [selectedFriends, friendsToAdd]);
 
   function handleToggle(friendId: number) {
     const index = selectedFriends.indexOf(friendId);
@@ -30,6 +42,24 @@ export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
     } else {
       setSelectedFriends(selectedFriends.filter((each) => each !== friendId));
     }
+  }
+
+  function handleClickAdd() {
+    const name = (prompt() ?? "").trim();
+    const existingNames = allFriends.map((f) => f.name);
+    if (name === "") {
+      return;
+    } else if (existingNames.includes(name)) {
+      return;
+    } else if (friendsToAdd.includes(name)) {
+      return;
+    } else {
+      setFriendsToAdd([...friendsToAdd, name]);
+    }
+  }
+
+  function handleCancelCreate(name: string) {
+    setFriendsToAdd(friendsToAdd.filter((each) => each !== name));
   }
 
   return (
@@ -42,6 +72,16 @@ export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
           onToggle={() => handleToggle(friend.id)}
         ></ToggleFriend>
       ))}
+      {friendsToAdd.map((name) => (
+        <>
+          <Button key={name} onClick={() => handleCancelCreate(name)}>
+            ({name})
+          </Button>{" "}
+        </>
+      ))}
+      <IconButton variant="outline" onClick={handleClickAdd}>
+        <PlusIcon />
+      </IconButton>
     </>
   );
 });

@@ -14,18 +14,28 @@ export function CreateHangout({ onAdd, allFriends }: Props) {
   const dateRef = useRef<HTMLInputElement>(null);
 
   async function handleAdd() {
-    const friends = friendsRef.current!.getValue();
+    const { friendIds: existingFriendIds, friendNamesToCreate } =
+      friendsRef.current!.getValue();
     const title = titleRef.current!.value.trim();
     const hangout_date_string = dateRef.current!.value.trim();
 
     titleRef.current!.value = "";
     dateRef.current!.value = "";
 
+    // todo Can add a bulk-create endpoint or just parallelize
+    const createdFriendIds: number[] = [];
+    for (const name of friendNamesToCreate) {
+      const { id } = await api.createMyFriend({ name });
+      createdFriendIds.push(id);
+    }
+
+    const friendIds = [...existingFriendIds, ...createdFriendIds];
+
     await api.createMyHangout({
       title,
       hangout_date_string,
       description: "",
-      friends,
+      friends: friendIds,
     });
     onAdd();
   }
