@@ -46,7 +46,7 @@ export function HangoutsPage() {
                     {friend.name}
                   </RouterLink>
                 </Link>
-                {i < friends.length - 1 ? <Text>{", "}</Text> : null}
+                {i < friends.length - 1 && <Text>{", "}</Text>}
               </React.Fragment>
             ))}
           </div>
