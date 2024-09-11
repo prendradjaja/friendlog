@@ -10,7 +10,7 @@ export interface Config {
 }
 
 export const devConfig: Config = {
-  port: "8000",
+  port: "2201",
   allowAnyOrigin: true,
   allowAnyHeaders: true,
   allowAnyMethods: true,
