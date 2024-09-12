@@ -2,10 +2,10 @@ import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
 import { Friend } from "shared";
 import { SelectFriends, SelectFriendsHandle } from "./SelectFriends";
-import { format } from "date-fns";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import StyleWrapper from "./CreateHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
+import { getToday } from "./date-util";
 
 interface LoaderData {
   allFriends: Friend[];
@@ -84,7 +84,3 @@ CreateHangoutPage.loader = async (): Promise<LoaderData> => {
   const allFriends = await api.getMyFriends();
   return { allFriends };
 };
-
-function getToday(): string {
-  return format(new Date(), "yyyy-MM-dd");
-}

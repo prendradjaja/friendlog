@@ -12,6 +12,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
 import * as React from "react";
 import { getLoginStatus } from "./login-status-store";
+import { formatRelativeToToday } from "./date-util";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -64,7 +65,7 @@ export function HangoutsPage() {
             ))}
           </div>
           <Text as="div" size="2" color="gray">
-            {hangout.hangout_date_string}
+            {formatRelativeToToday(hangout.hangout_date_string)}
           </Text>
           <Text as="div">{hangout.title}</Text>
         </Card>
