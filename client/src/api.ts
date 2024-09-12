@@ -63,3 +63,9 @@ export function createMyHangout(newHangout: NewHangout): Promise<{}> {
     body: JSON.stringify(newHangout),
   });
 }
+
+export function deleteHangout(hangoutId: number): Promise<{}> {
+  return myFetch("/api/me/hangouts/" + hangoutId, {
+    method: "DELETE",
+  });
+}

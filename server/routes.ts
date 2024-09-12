@@ -127,5 +127,12 @@ export function createAPIRoutes(config: Config, repo: Repository) {
     res.json({});
   });
 
+  router.delete("/me/hangouts/:hangoutId", async (req, res) => {
+    const userId = getUserId(req);
+    const hangoutId = +req.params.hangoutId;
+    await repo.deleteHangout(userId, hangoutId);
+    res.json({});
+  });
+
   return router;
 }

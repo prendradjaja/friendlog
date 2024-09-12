@@ -88,6 +88,27 @@ export class Repository {
     });
   }
 
+  public async deleteHangout(userId: number, hangoutId: number) {
+    await this.db.transaction().execute(async (trx) => {
+      const { owner_id } = await trx
+        .selectFrom("hangout")
+        .select("owner_id")
+        .where("id", "=", hangoutId)
+        .executeTakeFirstOrThrow();
+
+      if (owner_id !== userId) {
+        throw new Error("Can't delete another user's hangout");
+      }
+
+      await trx
+        .deleteFrom("friend_hangout")
+        .where("hangout_id", "=", hangoutId)
+        .execute();
+
+      await trx.deleteFrom("hangout").where("id", "=", hangoutId).execute();
+    });
+  }
+
   // Auth methods
 
   public async getAccountIdViaFederatedIdentity(
