@@ -14,6 +14,8 @@ import {
 import * as path from "path";
 import morgan from "morgan";
 import { createAPIRoutes } from "./routes";
+import { registerAuthenticationRoutes } from "./authentication";
+import passport from "passport";
 
 function main() {
   const config = loadConfig();
@@ -32,6 +34,7 @@ function main() {
   app.use(express.json());
   configureCORSHeaders(app);
 
+  registerAuthenticationRoutes(app, passport);
   app.use("/api", createAPIRoutes(config, repo));
 
   if (staticFilesPath) {
