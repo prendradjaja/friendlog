@@ -11,6 +11,7 @@ import {
   Friend,
   CreateFriendResponse,
 } from "shared";
+import { ensureLoggedIn, getUserId } from "./authentication";
 
 export function createAPIRoutes(config: Config, repo: Repository) {
   const router = Router();
@@ -53,15 +54,19 @@ export function createAPIRoutes(config: Config, repo: Repository) {
 
   // todo Error handling for all the endpoints
 
+  router.use(ensureLoggedIn);
+
   router.get("/me/friends", async (req, res) => {
-    const friends = await repo.getMyFriends();
+    const userId = getUserId(req);
+    const friends = await repo.getMyFriends(userId);
     res.json(friends);
   });
 
   router.get("/me/friends/:friendId/hangouts", async (req, res) => {
+    const userId = getUserId(req);
     // todo DRY with /me/hangouts, also maybe grab fixes from its todos (n+1 queries problem, join)
     const friendId = +req.params.friendId;
-    const rawHangouts = await repo.getMyHangouts();
+    const rawHangouts = await repo.getMyHangouts(userId);
     const hangouts: Hangout[] = [];
     for (const hangout of rawHangouts) {
       const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
@@ -83,8 +88,9 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   });
 
   router.post("/me/friends", async (req, res) => {
+    const userId = getUserId(req);
     const newFriend: NewFriend = req.body;
-    const rows = await repo.createMyFriend(newFriend);
+    const rows = await repo.createMyFriend(userId, newFriend);
     const result: CreateFriendResponse = {
       id: rows[0].id,
     };
@@ -92,9 +98,10 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   });
 
   router.get("/me/hangouts", async (req, res) => {
+    const userId = getUserId(req);
     // todo This is the n+1 queries problem -- fix
     // todo Getting friends also doesn't need to be separate from getting friend ids probably (join?)
-    const rawHangouts = await repo.getMyHangouts();
+    const rawHangouts = await repo.getMyHangouts(userId);
     const hangouts: Hangout[] = [];
     for (const hangout of rawHangouts) {
       const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
@@ -114,8 +121,9 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   });
 
   router.post("/me/hangouts", async (req, res) => {
+    const userId = getUserId(req);
     const newHangout: NewHangout = req.body;
-    await repo.createMyHangout(newHangout);
+    await repo.createMyHangout(userId, newHangout);
     res.json({});
   });
 

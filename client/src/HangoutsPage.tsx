@@ -1,5 +1,5 @@
 import * as api from "./api";
-import { Hangout } from "shared";
+import { LoginStatus, Hangout } from "shared";
 import { Card, Link, Text } from "@radix-ui/themes";
 import {
   LoaderFunctionArgs,
@@ -11,13 +11,15 @@ import { IconButton } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
 import * as React from "react";
+import { getLoginStatus } from "./login-status-store";
 
 interface LoaderData {
   hangouts: Hangout[];
+  loginStatus: LoginStatus;
 }
 
 export function HangoutsPage() {
-  const { hangouts } = useLoaderData() as LoaderData;
+  const { hangouts, loginStatus } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
 
   function handleAddHangout() {
@@ -35,9 +37,12 @@ export function HangoutsPage() {
             <Link asChild weight="bold">
               <RouterLink to="/devtools">Devtools</RouterLink>
             </Link>
+            <div>
+              Logged in as:{" "}
+              {loginStatus.isLoggedIn ? loginStatus.user.name : "None"}
+            </div>
           </div>
           <div>
-            <Link href="/login/federated/google">Sign in with Google</Link>
             <form method="post" action="/logout">
               <button type="submit">Log out</button>
             </form>
@@ -84,12 +89,15 @@ export function HangoutsPage() {
 HangoutsPage.loader = async ({
   params,
 }: LoaderFunctionArgs): Promise<LoaderData> => {
+  // todo Don't fetch login status in each route
+  const loginStatus = await getLoginStatus();
+
   const friendId = params.friendId;
   if (friendId === undefined) {
     const hangouts = await api.getMyHangouts();
-    return { hangouts };
+    return { loginStatus, hangouts };
   } else {
     const hangouts = await api.getMyHangoutsWithOneFriend(+friendId);
-    return { hangouts };
+    return { loginStatus, hangouts };
   }
 };
