@@ -74,11 +74,9 @@ export const SelectFriends = forwardRef(({ allFriends }: Props, ref) => {
         ></ToggleFriend>
       ))}
       {friendsToAdd.map((name) => (
-        <>
-          <Button key={name} onClick={() => handleCancelCreate(name)}>
-            ({name})
-          </Button>
-        </>
+        <Button key={name} onClick={() => handleCancelCreate(name)}>
+          ({name})
+        </Button>
       ))}
       <IconButton variant="outline" onClick={handleClickAdd}>
         <PlusIcon />
