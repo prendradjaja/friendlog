@@ -2,11 +2,12 @@ import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
 import { NewFriend, NewHangout } from "shared";
+import { databaseConfig } from "./database";
 
 const panduAccountId = 1;
 
 export class Repository {
-  constructor(private db: Kysely<DB>) {}
+  private db = new Kysely<DB>(databaseConfig);
 
   public getMyFriends(): Promise<db.Friend[]> {
     return this.db
