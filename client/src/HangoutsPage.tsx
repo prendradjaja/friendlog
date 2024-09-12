@@ -7,7 +7,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
-import { IconButton } from "@radix-ui/themes";
+import { IconButton, Button } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
 import * as React from "react";
@@ -33,22 +33,6 @@ export function HangoutsPage() {
         <Link asChild weight="bold" size="6">
           <RouterLink to="/">Friendlog</RouterLink>
         </Link>
-        <div>
-          <div>
-            <Link asChild weight="bold">
-              <RouterLink to="/devtools">Devtools</RouterLink>
-            </Link>
-            <div>
-              Logged in as:{" "}
-              {loginStatus.isLoggedIn ? loginStatus.user.name : "None"}
-            </div>
-          </div>
-          <div>
-            <form method="post" action="/logout">
-              <button type="submit">Log out</button>
-            </form>
-          </div>
-        </div>
       </div>
       {hangouts.map((hangout) => (
         <Card key={hangout.id}>
@@ -70,6 +54,13 @@ export function HangoutsPage() {
           <Text as="div">{hangout.title}</Text>
         </Card>
       ))}
+
+      <form method="post" action="/logout">
+        <Button type="submit" size="1" variant="outline">
+          Log out{" "}
+          {loginStatus.isLoggedIn ? loginStatus.user.name : "(Not logged in)"}
+        </Button>
+      </form>
 
       {/* todo Maybe use a link instead of a button. Would have to do it myself: Radix Themes
       doesn't have such a "link that looks like a button" component. */}
