@@ -55,6 +55,14 @@ export function registerAuthenticationRoutes(
   passport: PassportStatic,
 ) {
   app.get("/login/federated/google", passport.authenticate("google"));
+
+  app.get(
+    "/oauth2/redirect/google",
+    passport.authenticate("google", {
+      successRedirect: "/",
+      failureRedirect: "/",
+    }),
+  );
 }
 
 function makeVerifyUserCallback(repo: Repository) {
