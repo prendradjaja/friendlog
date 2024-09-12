@@ -14,6 +14,14 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Account {
   id: Generated<number>;
+  name: string;
+}
+
+export interface FederatedCredential {
+  account_id: number;
+  id: Generated<number>;
+  provider: string;
+  subject: string;
 }
 
 export interface Friend {
@@ -37,6 +45,7 @@ export interface Hangout {
 
 export interface DB {
   account: Account;
+  federated_credential: FederatedCredential;
   friend: Friend;
   friend_hangout: FriendHangout;
   hangout: Hangout;
