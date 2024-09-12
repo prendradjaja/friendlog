@@ -3,6 +3,7 @@ import { Express, Router } from "express";
 import { Repository } from "./repository";
 import { Config } from "./config";
 import {
+  LoginStatus,
   ExampleMessage,
   Hangout,
   NewFriend,
@@ -21,6 +22,23 @@ export function createAPIRoutes(config: Config, repo: Repository) {
     } else {
       setTimeout(next, fakeNetworkDelay);
     }
+  });
+
+  router.get("/me", async (req, res) => {
+    let result: LoginStatus;
+    if (req.isAuthenticated === undefined || !req.isAuthenticated()) {
+      result = {
+        isLoggedIn: false,
+      };
+    } else {
+      result = {
+        isLoggedIn: true,
+        user: {
+          name: (req.user as any)?.name,
+        },
+      };
+    }
+    res.json(result);
   });
 
   router.get("/example-messages/:messageId", async (req, res) => {
