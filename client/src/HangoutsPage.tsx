@@ -31,9 +31,14 @@ export function HangoutsPage() {
           <RouterLink to="/">Friendlog</RouterLink>
         </Link>
         <div>
-          <Link asChild weight="bold">
-            <RouterLink to="/devtools">Devtools</RouterLink>
-          </Link>
+          <div>
+            <Link asChild weight="bold">
+              <RouterLink to="/devtools">Devtools</RouterLink>
+            </Link>
+          </div>
+          <div>
+            <Link href="/login/federated/google">Sign in with Google</Link>
+          </div>
         </div>
       </div>
       {hangouts.map((hangout) => (
