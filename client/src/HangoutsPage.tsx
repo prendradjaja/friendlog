@@ -38,6 +38,9 @@ export function HangoutsPage() {
           </div>
           <div>
             <Link href="/login/federated/google">Sign in with Google</Link>
+            <form method="post" action="/logout">
+              <button type="submit">Log out</button>
+            </form>
           </div>
         </div>
       </div>
