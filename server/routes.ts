@@ -11,6 +11,7 @@ import {
   Friend,
   CreateFriendResponse,
 } from "shared";
+import { ensureLoggedIn } from "./authentication";
 
 export function createAPIRoutes(config: Config, repo: Repository) {
   const router = Router();
@@ -52,6 +53,8 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   });
 
   // todo Error handling for all the endpoints
+
+  router.use(ensureLoggedIn);
 
   router.get("/me/friends", async (req, res) => {
     const friends = await repo.getMyFriends();
