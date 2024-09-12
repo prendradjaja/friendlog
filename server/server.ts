@@ -14,7 +14,10 @@ import {
 import * as path from "path";
 import morgan from "morgan";
 import { createAPIRoutes } from "./routes";
-import { registerAuthenticationRoutes } from "./authentication";
+import {
+  setUpAuthentication,
+  registerAuthenticationRoutes,
+} from "./authentication";
 import passport from "passport";
 
 function main() {
@@ -33,6 +36,7 @@ function main() {
   app.use(morgan("dev"));
   app.use(express.json());
   configureCORSHeaders(app);
+  setUpAuthentication(app, repo, passport);
 
   registerAuthenticationRoutes(app, passport);
   app.use("/api", createAPIRoutes(config, repo));
