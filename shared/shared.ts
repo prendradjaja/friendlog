@@ -2,6 +2,15 @@ import * as db from "server/database-types";
 import type { Repository } from "server/repository";
 import { Prettify } from "ts-essentials";
 
+export type LoginStatus =
+  | {
+      isLoggedIn: false;
+    }
+  | {
+      isLoggedIn: true;
+      user: { name: string };
+    };
+
 export interface ExampleMessage {
   value: string;
 }

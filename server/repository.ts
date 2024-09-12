@@ -2,11 +2,12 @@ import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
 import { NewFriend, NewHangout } from "shared";
+import { databaseConfig } from "./database";
 
 const panduAccountId = 1;
 
 export class Repository {
-  constructor(private db: Kysely<DB>) {}
+  private db = new Kysely<DB>(databaseConfig);
 
   public getMyFriends(): Promise<db.Friend[]> {
     return this.db
@@ -84,5 +85,65 @@ export class Repository {
       }));
       await trx.insertInto("friend_hangout").values(rows).execute();
     });
+  }
+
+  // Auth methods
+
+  public async getAccountIdViaFederatedIdentity(
+    provider: string,
+    subject: string,
+  ): Promise<number | undefined> {
+    const rows = await this.db
+      .selectFrom("federated_credential")
+      .select(["account_id"]) // todo Passportjs example used SELECT *
+      .where("provider", "=", provider)
+      .where("subject", "=", subject)
+      .limit(1)
+      .execute();
+
+    if (rows.length) {
+      return rows[0].account_id;
+    } else {
+      return undefined;
+    }
+  }
+
+  public getAccount(id: number) {
+    // Promise<{ id: number, name: string }>
+    return this.db
+      .selectFrom("account")
+      .select(["id", "name"]) // todo Passportjs example used SELECT *
+      .where("id", "=", id)
+      .executeTakeFirstOrThrow();
+  }
+
+  public async createAccount(name: string): Promise<number> {
+    const rows = await this.db
+      .insertInto("account")
+      .values([
+        {
+          name,
+        },
+      ])
+      .returning(["id"])
+      .execute();
+    return rows[0].id;
+  }
+
+  public createFederatedCredential(
+    account_id: number,
+    provider: string,
+    subject: string,
+  ) {
+    return this.db
+      .insertInto("federated_credential")
+      .values([
+        {
+          account_id,
+          provider,
+          subject,
+        },
+      ])
+      .execute();
   }
 }

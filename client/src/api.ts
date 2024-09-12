@@ -1,4 +1,5 @@
 import {
+  LoginStatus,
   ExampleMessage,
   MyFriendsResponse,
   NewFriend,
@@ -15,6 +16,10 @@ async function myFetch<T>(path: string, options?: RequestInit): Promise<T> {
   } else {
     return Promise.reject(await res.json());
   }
+}
+
+export function getLoginStatus(): Promise<LoginStatus> {
+  return myFetch("/api/me");
 }
 
 export function getExampleMessageById(
