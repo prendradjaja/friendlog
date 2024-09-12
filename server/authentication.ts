@@ -17,6 +17,42 @@ interface Profile {
 
 const PGStore = connectPGSimple(session);
 
+/**
+ * Check if the user is logged in; else give a 403 Forbidden.
+ *
+ * This can be used as middleware on the app or on a Router, e.g.
+ *
+ *     // All routes below this use ensureLoggedIn
+ *     router.use(ensureLoggedIn);
+ *
+ * It can also be used on an individual route:
+ *
+ *     router.get(
+ *       "/some/route",
+ *       ensureLoggedIn,
+ *       async (req, res) => { ... }  // Your route handler here
+ *     )
+ */
+export function ensureLoggedIn(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (!req.isAuthenticated || !req.isAuthenticated()) {
+    res.status(403).json({});
+    return;
+  }
+  next();
+}
+
+/**
+ * Get the ID of the logged in user. This should only be used if the user is logged in (i.e. use
+ * this together with ensureLoggedIn()). If the user is not logged in, an exception will be thrown.
+ */
+export function getUserId(req: Request): number {
+  return (req.user as any).id; // todo Add name and id fields to Express's user object
+}
+
 export function setUpAuthentication(
   app: Express,
   repo: Repository,
