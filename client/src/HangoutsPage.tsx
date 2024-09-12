@@ -1,16 +1,6 @@
 import * as api from "./api";
 import { LoginStatus, Hangout } from "shared";
-import { DotsVerticalIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import {
-  Card,
-  Link,
-  Text,
-  AlertDialog,
-  Dialog,
-  Flex,
-  TextField,
-  DropdownMenu,
-} from "@radix-ui/themes";
+import { Link } from "@radix-ui/themes";
 import {
   LoaderFunctionArgs,
   Link as RouterLink,
@@ -20,9 +10,8 @@ import {
 import { IconButton, Button } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
-import * as React from "react";
 import { getLoginStatus } from "./login-status-store";
-import { formatRelativeToToday } from "./date-util";
+import { HangoutCard } from "./HangoutCard";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -46,39 +35,7 @@ export function HangoutsPage() {
       </div>
 
       {hangouts.map((hangout) => (
-        <Card key={hangout.id}>
-          <div style={{ display: "flex", width: "100%" }}>
-            <div style={{ flexGrow: "1" }}>
-              {hangout.friends.map((friend, i, friends) => (
-                <React.Fragment key={friend.id}>
-                  <Link asChild weight="bold">
-                    <RouterLink to={"/friends/" + friend.id}>
-                      {friend.name}
-                    </RouterLink>
-                  </Link>
-                  {i < friends.length - 1 && <Text>{", "}</Text>}
-                </React.Fragment>
-              ))}
-            </div>
-            <div>
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <IconButton variant="ghost">
-                    <HamburgerMenuIcon />
-                  </IconButton>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
-                  <DropdownMenu.Item>Delete</DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            </div>
-          </div>
-          <Text as="div" size="2" color="gray">
-            {formatRelativeToToday(hangout.hangout_date_string)}
-          </Text>
-          <Text as="div">{hangout.title}</Text>
-        </Card>
+        <HangoutCard key={hangout.id} hangout={hangout} />
       ))}
 
       <form method="post" action="/logout">
