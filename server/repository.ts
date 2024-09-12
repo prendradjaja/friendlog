@@ -4,21 +4,20 @@ import * as db from "./database-types";
 import { NewFriend, NewHangout } from "shared";
 import { databaseConfig } from "./database";
 
-const panduAccountId = 1;
-
 export class Repository {
   private db = new Kysely<DB>(databaseConfig);
 
-  public getMyFriends(): Promise<db.Friend[]> {
+  public getMyFriends(userId: number): Promise<db.Friend[]> {
     return this.db
       .selectFrom("friend")
       .selectAll()
-      .where("owner_id", "=", panduAccountId)
+      .where("owner_id", "=", userId)
       .orderBy("name asc")
       .execute();
   }
 
   public getFriend(friendId: number): Promise<db.Friend> {
+    // todo Maybe prevent getting another user's data
     return this.db
       .selectFrom("friend")
       .selectAll()
@@ -26,18 +25,18 @@ export class Repository {
       .executeTakeFirstOrThrow();
   }
 
-  public createMyFriend(newFriend: NewFriend) {
+  public createMyFriend(userId: number, newFriend: NewFriend) {
     return this.db
       .insertInto("friend")
       .values({
         ...newFriend,
-        owner_id: panduAccountId,
+        owner_id: userId,
       })
       .returning("id")
       .execute();
   }
 
-  public getMyHangouts() {
+  public getMyHangouts(userId: number) {
     return this.db
       .selectFrom("hangout")
       .select([
@@ -49,13 +48,14 @@ export class Repository {
         "owner_id",
         "title",
       ])
-      .where("owner_id", "=", panduAccountId)
+      .where("owner_id", "=", userId)
       .orderBy(["hangout_date desc", "id desc"])
       .execute();
   }
 
   // Given a hangout id, return all the friends associated with that hangout
   public getHangoutFriends(hangoutId: number) {
+    // todo Maybe prevent getting another user's data
     return this.db
       .selectFrom("friend_hangout")
       .selectAll()
@@ -63,7 +63,8 @@ export class Repository {
       .execute();
   }
 
-  public async createMyHangout(newHangout: NewHangout) {
+  public async createMyHangout(userId: number, newHangout: NewHangout) {
+    // todo Probably check the friends all belong to the given user
     await this.db.transaction().execute(async (trx) => {
       const { friends, hangout_date_string, ...newHangoutRow } = newHangout;
       const hangout = await trx
@@ -72,7 +73,7 @@ export class Repository {
           {
             ...newHangoutRow,
             hangout_date: hangout_date_string,
-            owner_id: panduAccountId,
+            owner_id: userId,
           },
         ])
         .returning("id")
