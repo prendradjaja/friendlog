@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "@radix-ui/themes/styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AnonHomePage } from "./AnonHomePage";
 import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
 import { CreateHangoutPage } from "./CreateHangoutPage";
@@ -11,6 +12,11 @@ import { Theme } from "@radix-ui/themes";
 const router = createBrowserRouter([
   {
     path: "/",
+    element: <AnonHomePage />,
+    loader: AnonHomePage.loader,
+  },
+  {
+    path: "/home",
     element: <HangoutsPage />,
     loader: HangoutsPage.loader,
   },
