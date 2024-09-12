@@ -36,6 +36,7 @@ export function setUpAuthentication(
       }),
     }),
   );
+  app.use(passport.authenticate("session"));
 
   passport.use(
     new GoogleStrategy(
@@ -48,6 +49,20 @@ export function setUpAuthentication(
       makeVerifyUserCallback(repo),
     ),
   );
+
+  passport.serializeUser(function (user: any, cb) {
+    // todo Any
+    process.nextTick(function () {
+      cb(null, { id: user.id, name: user.name });
+    });
+  });
+
+  passport.deserializeUser(function (user: any, cb) {
+    // todo Any
+    process.nextTick(function () {
+      return cb(null, user);
+    });
+  });
 }
 
 export function registerAuthenticationRoutes(
