@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AnonHomePage } from "./AnonHomePage";
 import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
+import { SandboxPage } from "./SandboxPage";
 import { CreateHangoutPage } from "./CreateHangoutPage";
 import { Theme } from "@radix-ui/themes";
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/devtools",
     element: <DevtoolsPage />,
+  },
+  {
+    path: "/devtools/sandbox",
+    element: <SandboxPage />,
   },
 ]);
 
