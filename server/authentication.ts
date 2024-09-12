@@ -1,8 +1,11 @@
 import { Express, Request, Response, NextFunction } from "express";
 import { PassportStatic } from "passport";
+import session from "express-session";
+import connectPGSimple from "connect-pg-simple";
 // @ts-ignore
 import GoogleStrategy from "passport-google-oidc"; // Type definitions don't exist, so GoogleStrategy is typed as `any`.
 
+import { dbPool } from "./database";
 import { Account } from "./database-types";
 import { Repository } from "./repository";
 import { loadConfig } from "./config";
@@ -12,6 +15,8 @@ interface Profile {
   displayName: string;
 }
 
+const PGStore = connectPGSimple(session);
+
 export function setUpAuthentication(
   app: Express,
   repo: Repository,
@@ -20,6 +25,17 @@ export function setUpAuthentication(
   const config = loadConfig();
   const { googleClientID, googleClientSecret, clientDomainForOAuthCallback } =
     config;
+
+  app.use(
+    session({
+      secret: "keyboard cat",
+      resave: false,
+      saveUninitialized: false,
+      store: new PGStore({
+        pool: dbPool,
+      }),
+    }),
+  );
 
   passport.use(
     new GoogleStrategy(

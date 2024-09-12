@@ -9,11 +9,13 @@ const sslOptions = {
   rejectUnauthorized: false,
 };
 
+export const dbPool = new Pool({
+  connectionString: databaseUrl,
+  ssl: useSSLForDatabaseConnection ? sslOptions : undefined,
+});
+
 const dialect = new PostgresDialect({
-  pool: new Pool({
-    connectionString: databaseUrl,
-    ssl: useSSLForDatabaseConnection ? sslOptions : undefined,
-  }),
+  pool: dbPool,
 });
 
 export const databaseConfig: KyselyConfig = {
