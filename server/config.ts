@@ -15,6 +15,7 @@ export interface Config {
   fakeNetworkDelay: number | undefined; // In milliseconds
   googleClientID: string;
   googleClientSecret: string;
+  clientDomainForOAuthCallback: string;
 }
 
 const loadDevConfig = (getSecret: GetSecretFunction) =>
@@ -29,6 +30,7 @@ const loadDevConfig = (getSecret: GetSecretFunction) =>
     fakeNetworkDelay: 100,
     googleClientID: getSecret("GOOGLE_CLIENT_ID"),
     googleClientSecret: getSecret("GOOGLE_CLIENT_SECRET"),
+    clientDomainForOAuthCallback: "http://localhost:2200",
   }) satisfies Config;
 
 const loadProductionConfig: () => Config = () =>
@@ -43,6 +45,7 @@ const loadProductionConfig: () => Config = () =>
     fakeNetworkDelay: undefined,
     googleClientID: getEnvironmentVariable("GOOGLE_CLIENT_ID"),
     googleClientSecret: getEnvironmentVariable("GOOGLE_CLIENT_SECRET"),
+    clientDomainForOAuthCallback: "",
   }) satisfies Config;
 
 export function loadConfig(): Config {
