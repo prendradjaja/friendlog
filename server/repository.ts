@@ -36,23 +36,6 @@ export class Repository {
       .execute();
   }
 
-  public getMyHangouts(userId: number) {
-    return this.db
-      .selectFrom("hangout")
-      .select([
-        "description",
-        sql<string>`to_char(hangout_date, 'YYYY-MM-DD')`.as(
-          "hangout_date_string",
-        ),
-        "id",
-        "owner_id",
-        "title",
-      ])
-      .where("owner_id", "=", userId)
-      .orderBy(["hangout_date desc", "id desc"])
-      .execute();
-  }
-
   /**
    * For a given user, get:
    * - all hangouts, OR
@@ -87,16 +70,6 @@ export class Repository {
       );
     }
     return query.execute();
-  }
-
-  // Given a hangout id, return all the friends associated with that hangout
-  public getHangoutFriends(hangoutId: number) {
-    // todo Maybe prevent getting another user's data
-    return this.db
-      .selectFrom("friend_hangout")
-      .selectAll()
-      .where("hangout_id", "=", hangoutId)
-      .execute();
   }
 
   public async createMyHangout(userId: number, newHangout: NewHangout) {
