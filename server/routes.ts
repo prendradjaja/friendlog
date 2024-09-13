@@ -63,6 +63,7 @@ export function createAPIRoutes(config: Config, repo: Repository) {
     res.json(friends);
   });
 
+  // todo Maybe change this to /me/hangouts?friendId=
   router.get("/me/friends/:friendId/hangouts", async (req, res) => {
     const userId = getUserId(req);
     const friendId = +req.params.friendId;
