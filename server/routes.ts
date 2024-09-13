@@ -12,6 +12,7 @@ import {
   CreateFriendResponse,
 } from "shared";
 import { ensureLoggedIn, getUserId } from "./authentication";
+import { unflattenHangouts } from "./routes.helpers";
 
 export function createAPIRoutes(config: Config, repo: Repository) {
   const router = Router();
@@ -64,26 +65,9 @@ export function createAPIRoutes(config: Config, repo: Repository) {
 
   router.get("/me/friends/:friendId/hangouts", async (req, res) => {
     const userId = getUserId(req);
-    // todo DRY with /me/hangouts, also maybe grab fixes from its todos (n+1 queries problem, join)
     const friendId = +req.params.friendId;
-    const rawHangouts = await repo.getMyHangouts(userId);
-    const hangouts: Hangout[] = [];
-    for (const hangout of rawHangouts) {
-      const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
-        (row) => row.friend_id,
-      );
-      const friends: Friend[] = [];
-      for (const id of friendIds) {
-        friends.push(await repo.getFriend(id));
-      }
-      hangouts.push({
-        ...hangout,
-        friends,
-      });
-    }
-    const results: Hangout[] = hangouts.filter((hangout) =>
-      hangout.friends.map((friend) => friend.id).includes(friendId),
-    );
+    const rows = await repo.getHangouts(userId, friendId);
+    const results: Hangout[] = unflattenHangouts(rows);
     res.json(results);
   });
 
@@ -99,25 +83,9 @@ export function createAPIRoutes(config: Config, repo: Repository) {
 
   router.get("/me/hangouts", async (req, res) => {
     const userId = getUserId(req);
-    // todo This is the n+1 queries problem -- fix
-    // todo Getting friends also doesn't need to be separate from getting friend ids probably (join?)
-    const rawHangouts = await repo.getMyHangouts(userId);
-    const hangouts: Hangout[] = [];
-    for (const hangout of rawHangouts) {
-      const friendIds = (await repo.getHangoutFriends(hangout.id)).map(
-        (row) => row.friend_id,
-      );
-      const friends: Friend[] = [];
-      for (const id of friendIds) {
-        friends.push(await repo.getFriend(id));
-      }
-      hangouts.push({
-        ...hangout,
-        friends,
-      });
-    }
-    const results: Hangout[] = hangouts;
-    res.json(hangouts);
+    const rows = await repo.getHangouts(userId);
+    const results: Hangout[] = unflattenHangouts(rows);
+    res.json(results);
   });
 
   router.post("/me/hangouts", async (req, res) => {
