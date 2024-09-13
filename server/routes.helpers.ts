@@ -31,8 +31,7 @@ export function unflattenHangouts(
       owner_id: friend_owner_id,
     });
   }
-  const results: Hangout[] = Array.from(resultsMap.values());
-  return results;
+  return Array.from(resultsMap.values());
 }
 
 main();
