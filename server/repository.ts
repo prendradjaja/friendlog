@@ -64,6 +64,7 @@ export class Repository {
       .selectFrom("hangout")
       .innerJoin("friend_hangout as fh", "hangout.id", "fh.hangout_id")
       .innerJoin("friend", "friend.id", "fh.friend_id")
+      .orderBy(["hangout_date desc", "id desc"])
       .select([
         "hangout.id",
         sql<string>`to_char(hangout_date, 'YYYY-MM-DD')`.as(
