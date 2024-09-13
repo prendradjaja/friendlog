@@ -17,11 +17,8 @@ export function unflattenHangouts(
   for (const row of rows) {
     const { friend_id, friend_name, friend_owner_id, ...hangoutProperties } =
       row;
-    let hangout: Hangout;
-    const match = resultsMap.get(row.id);
-    if (match !== undefined) {
-      hangout = match;
-    } else {
+    let hangout = resultsMap.get(row.id);
+    if (hangout === undefined) {
       hangout = {
         ...hangoutProperties,
         friends: [],
