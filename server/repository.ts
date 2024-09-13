@@ -78,7 +78,12 @@ export class Repository {
         "friend.owner_id as friend_owner_id",
       ]);
     if (friendId !== undefined) {
-      query = query.where("friend.id", "=", friendId);
+      query = query.where("hangout.id", "in", (qb) =>
+        qb
+          .selectFrom("friend_hangout")
+          .select("hangout_id")
+          .where("friend_id", "=", friendId),
+      );
     }
     return query.execute();
   }
