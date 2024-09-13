@@ -3,7 +3,7 @@ export default styled.div`
   padding: 10px;
 
   .header {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-3);
   }
 
   .rt-Card {
