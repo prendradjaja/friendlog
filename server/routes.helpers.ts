@@ -1,15 +1,6 @@
 import type { Repository } from "./repository";
 import { Hangout } from "shared";
 
-async function main() {
-  const { Repository } = await import("./repository");
-  const repo = new Repository();
-  const rows = await repo.getHangouts(3, 13);
-  console.table(rows);
-  const results = unflattenHangouts(rows);
-  console.log(JSON.stringify(results, null, 2));
-}
-
 export function unflattenHangouts(
   rows: Awaited<ReturnType<Repository["getHangouts"]>>,
 ): Hangout[] {
@@ -33,5 +24,3 @@ export function unflattenHangouts(
   }
   return Array.from(resultsMap.values());
 }
-
-main();
