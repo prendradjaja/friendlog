@@ -22,6 +22,7 @@ interface Props {
 }
 
 export function HangoutCard({ hangout }: Props) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -46,20 +47,25 @@ export function HangoutCard({ hangout }: Props) {
   ));
 
   const dropdown = (
-    <DropdownMenu.Root>
-      {/* todo Only open dropdown on mouseup */}
-      <DropdownMenu.Trigger>
-        <IconButton variant="ghost">
-          <HamburgerMenuIcon />
-        </IconButton>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
-        <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
-        <DropdownMenu.Item onSelect={() => setIsDeleteModalOpen(true)}>
-          Delete
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+    <>
+      <DropdownMenu.Root open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <DropdownMenu.Trigger>
+          <IconButton
+            variant="ghost"
+            onPointerDown={(e) => e.preventDefault()}
+            onClick={() => setIsDropdownOpen(true)}
+          >
+            <HamburgerMenuIcon />
+          </IconButton>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={() => setIsDeleteModalOpen(true)}>
+            Delete
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </>
   );
 
   const deleteModal = (
