@@ -18,7 +18,7 @@ export function unflattenHangouts(
     const { friend_id, friend_name, friend_owner_id, ...hangoutProperties } =
       row;
     let hangout = resultsMap.get(row.id);
-    if (hangout === undefined) {
+    if (!hangout) {
       hangout = {
         ...hangoutProperties,
         friends: [],
