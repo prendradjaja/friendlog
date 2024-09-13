@@ -1,7 +1,7 @@
 import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
-import { NewFriend, NewHangout } from "shared";
+import { Hangout, NewFriend, NewHangout } from "shared";
 import { databaseConfig } from "./database";
 
 export class Repository {
@@ -51,6 +51,36 @@ export class Repository {
       .where("owner_id", "=", userId)
       .orderBy(["hangout_date desc", "id desc"])
       .execute();
+  }
+
+  /**
+   * For a given user, get:
+   * - all hangouts, OR
+   * - all hangouts with a given friend
+   */
+  public async getHangouts(userId: number, friendId?: number) {
+    // todo Maybe prevent getting another user's data
+    let query = this.db
+      .selectFrom("hangout")
+      .innerJoin("friend_hangout as fh", "hangout.id", "fh.hangout_id")
+      .innerJoin("friend", "friend.id", "fh.friend_id")
+      .select([
+        "hangout.id",
+        sql<string>`to_char(hangout_date, 'YYYY-MM-DD')`.as(
+          "hangout_date_string",
+        ),
+        "hangout.title",
+        "hangout.owner_id",
+        "hangout.description",
+
+        "friend.id as friend_id",
+        "friend.name as friend_name",
+        "friend.owner_id as friend_owner_id",
+      ]);
+    if (friendId !== undefined) {
+      query = query.where("friend.id", "=", friendId);
+    }
+    return query.execute();
   }
 
   // Given a hangout id, return all the friends associated with that hangout
