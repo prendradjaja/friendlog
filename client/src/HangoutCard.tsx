@@ -47,6 +47,7 @@ export function HangoutCard({ hangout }: Props) {
 
   const dropdown = (
     <DropdownMenu.Root>
+      {/* todo Only open dropdown on mouseup */}
       <DropdownMenu.Trigger>
         <IconButton variant="ghost">
           <HamburgerMenuIcon />
