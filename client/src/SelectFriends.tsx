@@ -91,7 +91,6 @@ interface ToggleFriendProps {
   onToggle: () => void;
 }
 
-// todo Maybe inline this component
 function ToggleFriend({ name, selected, onToggle }: ToggleFriendProps) {
   return (
     <Button variant={selected ? "solid" : "outline"} onClick={onToggle}>
