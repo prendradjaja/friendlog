@@ -104,10 +104,12 @@ export function HangoutCard({ hangout }: Props) {
           <div>{friendNames}</div>
           <div>{dropdown}</div>
         </div>
-        <Text as="div" size="2" color="gray">
+        <Text as="div" size="2" color="gray" className="date">
           {formatRelativeToToday(hangout.hangout_date_string)}
         </Text>
-        <Text as="div">{hangout.title}</Text>
+        <Text as="div" className="body">
+          {hangout.title}
+        </Text>
       </Card>
       {deleteModal}
     </StyleWrapper>

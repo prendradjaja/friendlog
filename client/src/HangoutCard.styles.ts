@@ -7,4 +7,12 @@ export default styled.div`
       flex-grow: 1;
     }
   }
+
+  .date {
+    margin-bottom: var(--space-1);
+  }
+
+  .body {
+    line-height: 1.35;
+  }
 `;
