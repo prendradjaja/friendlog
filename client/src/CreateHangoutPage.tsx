@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import * as api from "./api";
 import { Friend } from "shared";
 import { useLoaderData, useNavigate } from "react-router-dom";
@@ -86,6 +86,13 @@ export function CreateHangoutPage() {
     navigate("/");
   }
 
+  useEffect(() => {
+    const el = document.querySelector<HTMLInputElement>(
+      ".my-select-container input",
+    )!;
+    el.enterKeyHint = "enter";
+  }, []);
+
   return (
     <StyleWrapper>
       <Heading as="h1">Create hangout</Heading>
@@ -93,24 +100,26 @@ export function CreateHangoutPage() {
       <Heading as="h2" size="3">
         Who
       </Heading>
-      <CreatableSelect
-        closeMenuOnSelect={false}
-        blurInputOnSelect={false}
-        isMulti
-        defaultValue={[] as SelectOption[]}
-        value={friends}
-        options={selectOptions}
-        onChange={setFriends}
-        styles={{
-          multiValue: (providedStyles, props) => ({
-            ...providedStyles,
-            backgroundColor: props.data.__isNew__
-              ? colors.reactSelectLightBlue
-              : providedStyles.backgroundColor,
-            fontStyle: props.data.__isNew__ ? "italic" : "normal",
-          }),
-        }}
-      />
+      <div className="my-select-container">
+        <CreatableSelect
+          closeMenuOnSelect={false}
+          blurInputOnSelect={false}
+          isMulti
+          defaultValue={[] as SelectOption[]}
+          value={friends}
+          options={selectOptions}
+          onChange={setFriends}
+          styles={{
+            multiValue: (providedStyles, props) => ({
+              ...providedStyles,
+              backgroundColor: props.data.__isNew__
+                ? colors.reactSelectLightBlue
+                : providedStyles.backgroundColor,
+              fontStyle: props.data.__isNew__ ? "italic" : "normal",
+            }),
+          }}
+        />
+      </div>
 
       <Heading as="h2" size="3">
         What
