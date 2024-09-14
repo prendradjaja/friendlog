@@ -1,20 +1,50 @@
 import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
 import { Friend } from "shared";
-import { SelectFriends, SelectFriendsHandle } from "./SelectFriends";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import StyleWrapper from "./CreateHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
+import CreatableSelect from "react-select/creatable";
 
 interface LoaderData {
   allFriends: Friend[];
 }
 
+// todo Move Select stuff into a separate component?
+interface KnownSelectOption {
+  __isNew__: false;
+  value: number;
+  label: string;
+  friend: Friend;
+}
+
+interface NewSelectOption {
+  __isNew__: false;
+  value: string;
+  label: string;
+}
+
+type SelectOption = KnownSelectOption | NewSelectOption;
+
+const colors = {
+  reactSelectLightBlue: "hsl(216 100 92)",
+  radixIndigo5: "#D2DEFF",
+} as const;
+
 export function CreateHangoutPage() {
   const { allFriends } = useLoaderData() as LoaderData;
+  const selectOptions = allFriends.map(
+    (friend) =>
+      ({
+        __isNew__: false,
+        value: friend.id,
+        label: friend.name,
+        friend,
+      }) satisfies KnownSelectOption,
+  );
+  const [friends, setFriends] = useState<readonly SelectOption[]>([]);
 
-  const friendsRef = useRef<SelectFriendsHandle>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
 
@@ -27,8 +57,12 @@ export function CreateHangoutPage() {
   async function handleAdd() {
     setSaving(true);
 
-    const { friendIds: existingFriendIds, friendNamesToCreate } =
-      friendsRef.current!.getValue();
+    const existingFriendIds = friends
+      .filter((option): option is KnownSelectOption => !option.__isNew__)
+      .map((option) => option.friend.id);
+    const friendNamesToCreate = friends
+      .filter((option): option is NewSelectOption => option.__isNew__)
+      .map((option) => option.value);
     const title = titleRef.current!.value.trim();
     const hangout_date_string = dateRef.current!.value;
 
@@ -59,7 +93,23 @@ export function CreateHangoutPage() {
       <Heading as="h2" size="3">
         Who
       </Heading>
-      <SelectFriends ref={friendsRef} allFriends={allFriends} />
+      <CreatableSelect
+        closeMenuOnSelect={false}
+        isMulti
+        defaultValue={[] as SelectOption[]}
+        value={friends}
+        options={selectOptions}
+        onChange={setFriends}
+        styles={{
+          multiValue: (providedStyles, props) => ({
+            ...providedStyles,
+            backgroundColor: props.data.__isNew__
+              ? colors.reactSelectLightBlue
+              : providedStyles.backgroundColor,
+            fontStyle: props.data.__isNew__ ? "italic" : "normal",
+          }),
+        }}
+      />
 
       <Heading as="h2" size="3">
         What
