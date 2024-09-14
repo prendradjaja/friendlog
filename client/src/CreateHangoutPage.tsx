@@ -95,6 +95,7 @@ export function CreateHangoutPage() {
       </Heading>
       <CreatableSelect
         closeMenuOnSelect={false}
+        blurInputOnSelect={false}
         isMulti
         defaultValue={[] as SelectOption[]}
         value={friends}
