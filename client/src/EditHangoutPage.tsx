@@ -2,7 +2,7 @@ import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
 import { Friend } from "shared";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import StyleWrapper from "./CreateHangoutPage.styles";
+import StyleWrapper from "./EditHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
@@ -32,7 +32,7 @@ const colors = {
   radixIndigo5: "#D2DEFF",
 } as const;
 
-export function CreateHangoutPage() {
+export function EditHangoutPage() {
   const { allFriends } = useLoaderData() as LoaderData;
   const selectOptions = allFriends.map(
     (friend) =>
@@ -129,7 +129,7 @@ export function CreateHangoutPage() {
   );
 }
 
-CreateHangoutPage.loader = async (): Promise<LoaderData> => {
+EditHangoutPage.loader = async (): Promise<LoaderData> => {
   const allFriends = await api.getMyFriends();
   return { allFriends };
 };

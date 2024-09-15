@@ -7,7 +7,7 @@ import { AnonHomePage } from "./AnonHomePage";
 import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
 import { SandboxPage } from "./SandboxPage";
-import { CreateHangoutPage } from "./CreateHangoutPage";
+import { EditHangoutPage } from "./EditHangoutPage";
 import { Theme } from "@radix-ui/themes";
 
 const router = createBrowserRouter([
@@ -28,8 +28,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/hangouts/new",
-    element: <CreateHangoutPage />,
-    loader: CreateHangoutPage.loader,
+    element: <EditHangoutPage />,
+    loader: EditHangoutPage.loader,
   },
   {
     path: "/devtools",
