@@ -32,6 +32,11 @@ const router = createBrowserRouter([
     loader: EditHangoutPage.loader,
   },
   {
+    path: "/hangouts/:hangoutId/edit",
+    element: <EditHangoutPage />,
+    loader: EditHangoutPage.loader,
+  },
+  {
     path: "/devtools",
     element: <DevtoolsPage />,
   },

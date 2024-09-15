@@ -1,7 +1,11 @@
 import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
-import { Friend } from "shared";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Hangout, Friend } from "shared";
+import {
+  useLoaderData,
+  useNavigate,
+  LoaderFunctionArgs,
+} from "react-router-dom";
 import StyleWrapper from "./EditHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
@@ -9,6 +13,7 @@ import CreatableSelect from "react-select/creatable";
 
 interface LoaderData {
   allFriends: Friend[];
+  hangout: Hangout | undefined;
 }
 
 // todo Move Select stuff into a separate component?
@@ -129,7 +134,15 @@ export function EditHangoutPage() {
   );
 }
 
-EditHangoutPage.loader = async (): Promise<LoaderData> => {
+EditHangoutPage.loader = async ({
+  params,
+}: LoaderFunctionArgs): Promise<LoaderData> => {
+  const hangoutId: string | undefined = params.hangoutId;
+
   const allFriends = await api.getMyFriends();
-  return { allFriends };
+  let hangout: Hangout | undefined;
+  // if (hangoutId !== undefined) {
+  //   hangout = await api ...
+  // }
+  return { allFriends, hangout };
 };

@@ -59,7 +59,12 @@ export function HangoutCard({ hangout }: Props) {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item disabled>Edit</DropdownMenu.Item>
+          <DropdownMenu.Item
+            onSelect={() => navigate(`/hangouts/${hangout.id}/edit`)}
+          >
+            {/* todo Maybe use a link instead of onSelect */}
+            Edit
+          </DropdownMenu.Item>
           <DropdownMenu.Item onSelect={() => setIsDeleteModalOpen(true)}>
             Delete
           </DropdownMenu.Item>
