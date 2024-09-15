@@ -66,8 +66,6 @@ export function CreateHangoutPage() {
     const title = titleRef.current!.value.trim();
     const hangout_date_string = dateRef.current!.value;
 
-    titleRef.current!.value = "";
-
     // todo Can add a bulk-create endpoint or just parallelize
     const createdFriendIds: number[] = [];
     for (const name of friendNamesToCreate) {
