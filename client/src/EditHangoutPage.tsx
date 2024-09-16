@@ -48,7 +48,14 @@ export function EditHangoutPage() {
         friend,
       }) satisfies KnownSelectOption,
   );
-  const [friends, setFriends] = useState<readonly SelectOption[]>([]);
+  const hangoutFriendIds = hangout
+    ? hangout.friends.map((friend) => friend.id)
+    : [];
+  const defaultSelectValue = selectOptions.filter((option) =>
+    hangoutFriendIds.includes(option.friend.id),
+  );
+  const [friends, setFriends] =
+    useState<readonly SelectOption[]>(defaultSelectValue);
 
   const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
@@ -100,7 +107,7 @@ export function EditHangoutPage() {
         closeMenuOnSelect={false}
         blurInputOnSelect={false}
         isMulti
-        defaultValue={[] as SelectOption[]}
+        defaultValue={defaultSelectValue}
         value={friends}
         options={selectOptions}
         onChange={setFriends}
