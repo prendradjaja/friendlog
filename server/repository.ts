@@ -43,7 +43,26 @@ export class Repository {
    */
   public async getHangouts(userId: number, friendId?: number) {
     // todo Maybe prevent getting another user's data
-    let query = this.db
+    let query = this.getHangoutsQuery(userId);
+    if (friendId !== undefined) {
+      query = query.where("hangout.id", "in", (qb) =>
+        qb
+          .selectFrom("friend_hangout")
+          .select("hangout_id")
+          .where("friend_id", "=", friendId),
+      );
+    }
+    return query.execute();
+  }
+
+  public async getHangout(userId: number, hangoutId: number) {
+    return this.getHangoutsQuery(userId)
+      .where("hangout.id", "=", hangoutId)
+      .execute();
+  }
+
+  private getHangoutsQuery(userId: number) {
+    return this.db
       .selectFrom("hangout")
       .innerJoin("friend_hangout as fh", "hangout.id", "fh.hangout_id")
       .innerJoin("friend", "friend.id", "fh.friend_id")
@@ -62,15 +81,6 @@ export class Repository {
         "friend.name as friend_name",
         "friend.owner_id as friend_owner_id",
       ]);
-    if (friendId !== undefined) {
-      query = query.where("hangout.id", "in", (qb) =>
-        qb
-          .selectFrom("friend_hangout")
-          .select("hangout_id")
-          .where("friend_id", "=", friendId),
-      );
-    }
-    return query.execute();
   }
 
   public async createMyHangout(userId: number, newHangout: NewHangout) {

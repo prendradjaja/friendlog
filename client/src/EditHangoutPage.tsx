@@ -38,7 +38,7 @@ const colors = {
 } as const;
 
 export function EditHangoutPage() {
-  const { allFriends } = useLoaderData() as LoaderData;
+  const { allFriends, hangout } = useLoaderData() as LoaderData;
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -91,7 +91,7 @@ export function EditHangoutPage() {
 
   return (
     <StyleWrapper>
-      <Heading as="h1">Create hangout</Heading>
+      <Heading as="h1">{hangout ? "Edit hangout" : "Create hangout"}</Heading>
 
       <Heading as="h2" size="3">
         Who
@@ -118,12 +118,20 @@ export function EditHangoutPage() {
       <Heading as="h2" size="3">
         What
       </Heading>
-      <TextField.Root ref={titleRef} placeholder="e.g. Coffee at Timeless" />
+      <TextField.Root
+        ref={titleRef}
+        placeholder="e.g. Coffee at Timeless"
+        defaultValue={hangout?.title}
+      />
 
       <Heading as="h2" size="3">
         When
       </Heading>
-      <input ref={dateRef} type="date" defaultValue={today} />
+      <input
+        ref={dateRef}
+        type="date"
+        defaultValue={hangout?.hangout_date_string ?? today}
+      />
 
       <div className="button-container">
         <Button onClick={handleAdd} disabled={saving}>
@@ -138,11 +146,14 @@ EditHangoutPage.loader = async ({
   params,
 }: LoaderFunctionArgs): Promise<LoaderData> => {
   const hangoutId: string | undefined = params.hangoutId;
-
-  const allFriends = await api.getMyFriends();
-  let hangout: Hangout | undefined;
-  // if (hangoutId !== undefined) {
-  //   hangout = await api ...
-  // }
-  return { allFriends, hangout };
+  if (hangoutId !== undefined) {
+    const [allFriends, hangout] = await Promise.all([
+      api.getMyFriends(),
+      api.getHangout(+hangoutId),
+    ]);
+    return { allFriends, hangout };
+  } else {
+    const allFriends = await api.getMyFriends();
+    return { allFriends, hangout: undefined };
+  }
 };

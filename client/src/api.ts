@@ -44,7 +44,7 @@ export function createMyFriend(
   });
 }
 
-export function getMyHangouts(): Promise<Hangout[]> {
+export async function getMyHangouts(): Promise<Hangout[]> {
   return myFetch("/api/me/hangouts");
 }
 
@@ -62,6 +62,10 @@ export function createMyHangout(newHangout: NewHangout): Promise<{}> {
     },
     body: JSON.stringify(newHangout),
   });
+}
+
+export function getHangout(hangoutId: number): Promise<Hangout> {
+  return myFetch("/api/me/hangouts/" + hangoutId);
 }
 
 export function deleteHangout(hangoutId: number): Promise<{}> {

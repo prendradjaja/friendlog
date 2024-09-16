@@ -99,8 +99,14 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   router.get("/me/hangouts/:hangoutId", async (req, res) => {
     const userId = getUserId(req);
     const hangoutId = +req.params.hangoutId;
-    // await repo ...
-    res.json({});
+    const rawResult = await repo.getHangout(userId, hangoutId);
+    const results = unflattenHangouts(rawResult);
+    if (results.length !== 1) {
+      res.status(500).json({});
+    } else {
+      const result: Hangout = results[0];
+      res.json(result);
+    }
   });
 
   router.delete("/me/hangouts/:hangoutId", async (req, res) => {
