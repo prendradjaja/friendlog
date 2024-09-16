@@ -127,7 +127,7 @@ export class Repository {
   ): Promise<number | undefined> {
     const rows = await this.db
       .selectFrom("federated_credential")
-      .select(["account_id"]) // todo Passportjs example used SELECT *
+      .select(["account_id"])
       .where("provider", "=", provider)
       .where("subject", "=", subject)
       .limit(1)
@@ -141,10 +141,9 @@ export class Repository {
   }
 
   public getAccount(id: number) {
-    // Promise<{ id: number, name: string }>
     return this.db
       .selectFrom("account")
-      .select(["id", "name"]) // todo Passportjs example used SELECT *
+      .select(["id", "name"])
       .where("id", "=", id)
       .executeTakeFirstOrThrow();
   }
