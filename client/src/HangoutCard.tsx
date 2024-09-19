@@ -13,7 +13,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { IconButton, Button } from "@radix-ui/themes";
 import StyleWrapper from "./HangoutCard.styles";
 import * as React from "react";
-import { formatRelativeToToday } from "./date-util";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -105,7 +104,7 @@ export function HangoutCard({ hangout }: Props) {
           <div>{dropdown}</div>
         </div>
         <Text as="div" size="2" color="gray" className="date">
-          {formatRelativeToToday(hangout.hangout_date_string)}
+          {hangout.hangout_date_string}
         </Text>
         <Text as="div" className="body">
           {hangout.title}
