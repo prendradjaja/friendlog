@@ -6,6 +6,7 @@ import StyleWrapper from "./CreateHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
+import { InputProps, components } from "react-select";
 
 interface LoaderData {
   allFriends: Friend[];
@@ -31,6 +32,10 @@ const colors = {
   reactSelectLightBlue: "hsl(216 100 92)",
   radixIndigo5: "#D2DEFF",
 } as const;
+
+const Input = (props: InputProps<SelectOption>) => {
+  return <components.Input {...props} enterKeyHint="enter" />;
+};
 
 export function CreateHangoutPage() {
   const { allFriends } = useLoaderData() as LoaderData;
@@ -100,6 +105,7 @@ export function CreateHangoutPage() {
         options={selectOptions}
         onChange={setFriends}
         tabSelectsValue={false}
+        components={{ Input }}
         styles={{
           multiValue: (providedStyles, props) => ({
             ...providedStyles,
