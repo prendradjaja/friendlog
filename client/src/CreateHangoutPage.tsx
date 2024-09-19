@@ -99,6 +99,7 @@ export function CreateHangoutPage() {
         value={friends}
         options={selectOptions}
         onChange={setFriends}
+        tabSelectsValue={false}
         styles={{
           multiValue: (providedStyles, props) => ({
             ...providedStyles,
