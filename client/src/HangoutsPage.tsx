@@ -6,6 +6,7 @@ import {
   Link as RouterLink,
   useLoaderData,
   useNavigate,
+  redirect,
 } from "react-router-dom";
 import { IconButton, Button } from "@radix-ui/themes";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -61,18 +62,22 @@ export function HangoutsPage() {
   );
 }
 
-HangoutsPage.loader = async ({
-  params,
-}: LoaderFunctionArgs): Promise<LoaderData> => {
+HangoutsPage.loader = async ({ params }: LoaderFunctionArgs) => {
   // todo Don't fetch login status in each route
   const loginStatus = await getLoginStatus();
 
+  if (!loginStatus.isLoggedIn) {
+    return redirect("/");
+  }
+
   const friendId = params.friendId;
+  let result: LoaderData;
   if (friendId === undefined) {
     const hangouts = await api.getMyHangouts();
-    return { loginStatus, hangouts };
+    result = { loginStatus, hangouts };
   } else {
     const hangouts = await api.getMyHangoutsWithOneFriend(+friendId);
-    return { loginStatus, hangouts };
+    result = { loginStatus, hangouts };
   }
+  return result;
 };
