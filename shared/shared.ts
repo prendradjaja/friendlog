@@ -15,17 +15,15 @@ export interface ExampleMessage {
   value: string;
 }
 
+export type Friend = db.Friend;
+export type NewFriend = Pick<db.NewFriend, "name">;
+
 export type Hangout = Prettify<
   Omit<db.Hangout, "hangout_date"> & {
     friends: db.Friend[];
     hangout_date_string: string;
   }
 >;
-
-export type Friend = db.Friend;
-
-export type NewFriend = Pick<db.NewFriend, "name">;
-
 export type NewHangout = Prettify<
   Omit<db.NewHangout, "id" | "owner_id" | "hangout_date"> & {
     friends: number[];
