@@ -6,6 +6,7 @@ import {
   NewHangout,
   Hangout,
   CreateFriendResponse,
+  HangoutUpdate,
 } from "shared";
 import { baseUrl } from "./base-url";
 
@@ -66,6 +67,19 @@ export function createMyHangout(newHangout: NewHangout): Promise<{}> {
 
 export function getHangout(hangoutId: number): Promise<Hangout> {
   return myFetch("/api/me/hangouts/" + hangoutId);
+}
+
+export function updateHangout(
+  hangoutId: number,
+  hangoutUpdate: HangoutUpdate,
+): Promise<{}> {
+  return myFetch("/api/me/hangouts/" + hangoutId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(hangoutUpdate),
+  });
 }
 
 export function deleteHangout(hangoutId: number): Promise<{}> {

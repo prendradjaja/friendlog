@@ -10,6 +10,7 @@ import {
   NewHangout,
   Friend,
   CreateFriendResponse,
+  HangoutUpdate,
 } from "shared";
 import { ensureLoggedIn, getUserId } from "./authentication";
 import { unflattenHangouts } from "./routes.helpers";
@@ -107,6 +108,14 @@ export function createAPIRoutes(config: Config, repo: Repository) {
       const result: Hangout = results[0];
       res.json(result);
     }
+  });
+
+  router.put("/me/hangouts/:hangoutId", async (req, res) => {
+    const userId = getUserId(req);
+    const hangoutId = +req.params.hangoutId;
+    const hangoutUpdate: HangoutUpdate = req.body;
+    await repo.updateHangout(userId, hangoutId, hangoutUpdate);
+    res.json({});
   });
 
   router.delete("/me/hangouts/:hangoutId", async (req, res) => {
