@@ -11,11 +11,23 @@ import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
+import { UnreachableCaseError, Prettify } from "ts-essentials";
 
-interface LoaderData {
-  allFriends: Friend[];
-  hangout: Hangout | undefined;
-}
+type LoaderData = Prettify<
+  {
+    allFriends: Friend[];
+  } & (
+    | {
+        mode: "edit";
+        hangout: Hangout;
+        hangoutId: number;
+      }
+    | {
+        mode: "create";
+        hangout: undefined;
+      }
+  )
+>;
 
 // todo Move Select stuff into a separate component?
 interface KnownSelectOption {
@@ -43,7 +55,8 @@ const Input = (props: InputProps<SelectOption>) => {
 };
 
 export function EditHangoutPage() {
-  const { allFriends, hangout } = useLoaderData() as LoaderData;
+  const loaderData = useLoaderData() as LoaderData;
+  const { allFriends, hangout } = loaderData;
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -92,12 +105,20 @@ export function EditHangoutPage() {
 
     const friendIds = [...existingFriendIds, ...createdFriendIds];
 
-    await api.createMyHangout({
+    const payload = {
       title,
       hangout_date_string,
       description: "",
       friends: friendIds,
-    });
+    };
+    if (loaderData.mode === "create") {
+      await api.createMyHangout(payload);
+    } else if (loaderData.mode === "edit") {
+      await api.updateHangout(loaderData.hangoutId, payload);
+    } else {
+      throw new UnreachableCaseError(loaderData);
+    }
+
     navigate("/");
   }
 
@@ -165,9 +186,9 @@ EditHangoutPage.loader = async ({
       api.getMyFriends(),
       api.getHangout(+hangoutId),
     ]);
-    return { allFriends, hangout };
+    return { allFriends, mode: "edit", hangout, hangoutId: +hangoutId };
   } else {
     const allFriends = await api.getMyFriends();
-    return { allFriends, hangout: undefined };
+    return { allFriends, mode: "create", hangout: undefined };
   }
 };
