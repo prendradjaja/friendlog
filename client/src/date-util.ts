@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 const weekdays = {
   0: "Sunday",
   1: "Monday",
@@ -27,7 +25,11 @@ export interface NaiveDateTuple {
 }
 
 export function getToday(): string {
-  return format(new Date(), "yyyy-MM-dd");
+  const now = new Date();
+  const year = now.getFullYear().toString();
+  const month = (now.getMonth() + 1).toString().padStart(2, "0");
+  const day = now.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // Format the given "timezone-naive" date relative to the browser's current date.
