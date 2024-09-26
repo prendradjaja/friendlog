@@ -25,6 +25,7 @@ const testCases: [string, NaiveDateTuple, string][] = [
   ["2023-12-31", wedSep25, "Sun 12/31"],
 
   // Future dates
+  ["2024-09-26", wedSep25, "Thu 9/26"],
   ["2025-01-01", wedSep25, "Wed 1/1"],
 ];
 
