@@ -8,6 +8,7 @@ import StyleWrapper from "./HangoutCard.styles";
 import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatRelative } from "./date-util";
 
 interface Props {
   hangout: Hangout;
@@ -97,7 +98,7 @@ export function HangoutCard({ hangout }: Props) {
           <div>{dropdown}</div>
         </div>
         <Text as="div" size="2" color="gray" className="date">
-          {hangout.hangout_date_string}
+          {formatRelative(hangout.hangout_date_string)}
         </Text>
         <Text as="div" className="body">
           {hangout.title}
