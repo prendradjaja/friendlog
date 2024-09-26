@@ -10,6 +10,7 @@
     "migrate-to-latest-prod": "npx tsx migrate-to-latest.ts",
     "kysely-sandbox": "npx tsx watch kysely-sandbox.runner.ts",
     "typecheck-watch": "tsc --noEmit --watch",
+    "tc": "npm run typecheck-watch",
     "format": "cd .. && npm run format",
     "noop": "echo nothing"
   },

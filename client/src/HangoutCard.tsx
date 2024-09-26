@@ -1,21 +1,14 @@
 import * as api from "./api";
 import { Hangout } from "shared";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import {
-  Flex,
-  Card,
-  Link,
-  Text,
-  AlertDialog,
-  DropdownMenu,
-} from "@radix-ui/themes";
+import { Flex, Link, Text, AlertDialog, DropdownMenu } from "@radix-ui/themes";
 import { Link as RouterLink } from "react-router-dom";
 import { IconButton, Button } from "@radix-ui/themes";
 import StyleWrapper from "./HangoutCard.styles";
 import * as React from "react";
-import { formatRelativeToToday } from "./date-util";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatRelative } from "./date-util";
 
 interface Props {
   hangout: Hangout;
@@ -104,18 +97,18 @@ export function HangoutCard({ hangout }: Props) {
 
   return (
     <StyleWrapper>
-      <Card key={hangout.id}>
+      <div key={hangout.id}>
         <div className="hangout-header">
           <div>{friendNames}</div>
           <div>{dropdown}</div>
         </div>
         <Text as="div" size="2" color="gray" className="date">
-          {formatRelativeToToday(hangout.hangout_date_string)}
+          {formatRelative(hangout.hangout_date_string)}
         </Text>
         <Text as="div" className="body">
           {hangout.title}
         </Text>
-      </Card>
+      </div>
       {deleteModal}
     </StyleWrapper>
   );
