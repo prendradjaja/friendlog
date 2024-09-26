@@ -56,7 +56,7 @@ const Input = (props: InputProps<SelectOption>) => {
 
 export function EditHangoutPage() {
   const loaderData = useLoaderData() as LoaderData;
-  const { allFriends, hangout } = loaderData;
+  const { allFriends, hangout, mode } = loaderData;
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -84,7 +84,7 @@ export function EditHangoutPage() {
 
   const navigate = useNavigate();
 
-  async function handleAdd() {
+  async function handleSave() {
     setSaving(true);
 
     const existingFriendIds = friends
@@ -169,8 +169,8 @@ export function EditHangoutPage() {
       />
 
       <div className="button-container">
-        <Button onClick={handleAdd} disabled={saving}>
-          Add
+        <Button onClick={handleSave} disabled={saving}>
+          {mode === "create" ? "Add" : "Save"}
         </Button>
       </div>
     </StyleWrapper>
