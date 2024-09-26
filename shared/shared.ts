@@ -30,6 +30,7 @@ export type NewHangout = Prettify<
     hangout_date_string: string;
   }
 >;
+export type HangoutUpdate = NewHangout;
 
 export type MyFriendsResponse = ReturnType<Repository["getMyFriends"]>;
 export type MyHangoutsResponse = Hangout[];
