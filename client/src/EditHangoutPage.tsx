@@ -124,7 +124,9 @@ export function EditHangoutPage() {
 
   return (
     <StyleWrapper>
-      <Heading as="h1">{hangout ? "Edit hangout" : "Create hangout"}</Heading>
+      <Heading as="h1">
+        {mode === "edit" ? "Edit hangout" : "Create hangout"}
+      </Heading>
 
       <Heading as="h2" size="3">
         Who
