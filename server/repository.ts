@@ -1,7 +1,7 @@
 import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
-import { Hangout, NewFriend, NewHangout } from "shared";
+import { Hangout, HangoutUpdate, NewFriend, NewHangout } from "shared";
 import { databaseConfig } from "./database";
 
 export class Repository {
@@ -43,7 +43,26 @@ export class Repository {
    */
   public async getHangouts(userId: number, friendId?: number) {
     // todo Maybe prevent getting another user's data
-    let query = this.db
+    let query = this.getHangoutsQuery(this.db, userId);
+    if (friendId !== undefined) {
+      query = query.where("hangout.id", "in", (qb) =>
+        qb
+          .selectFrom("friend_hangout")
+          .select("hangout_id")
+          .where("friend_id", "=", friendId),
+      );
+    }
+    return query.execute();
+  }
+
+  public async getHangout(userId: number, hangoutId: number) {
+    return this.getHangoutsQuery(this.db, userId)
+      .where("hangout.id", "=", hangoutId)
+      .execute();
+  }
+
+  private getHangoutsQuery(dbOrTransaction: Kysely<DB>, userId: number) {
+    return dbOrTransaction
       .selectFrom("hangout")
       .innerJoin("friend_hangout as fh", "hangout.id", "fh.hangout_id")
       .innerJoin("friend", "friend.id", "fh.friend_id")
@@ -62,15 +81,6 @@ export class Repository {
         "friend.name as friend_name",
         "friend.owner_id as friend_owner_id",
       ]);
-    if (friendId !== undefined) {
-      query = query.where("hangout.id", "in", (qb) =>
-        qb
-          .selectFrom("friend_hangout")
-          .select("hangout_id")
-          .where("friend_id", "=", friendId),
-      );
-    }
-    return query.execute();
   }
 
   public async createMyHangout(userId: number, newHangout: NewHangout) {
@@ -95,6 +105,61 @@ export class Repository {
         hangout_id,
       }));
       await trx.insertInto("friend_hangout").values(rows).execute();
+    });
+  }
+
+  public async updateHangout(
+    userId: number,
+    hangoutId: number,
+    hangoutUpdate: HangoutUpdate,
+  ) {
+    // todo Probably check the friends all belong to the given user
+    await this.db.transaction().execute(async (trx) => {
+      const {
+        friends: newFriends,
+        hangout_date_string: hangout_date,
+        ...hangoutUpdate2
+      } = hangoutUpdate; // todo hangoutUpdate2 (& 3) are a code smell: Maybe split into smaller functions
+
+      // Add and/or remove friends
+      const oldFriends = (
+        await this.getHangoutsQuery(trx, userId)
+          .where("hangout.id", "=", hangoutId)
+          .execute()
+      ).map((hangout) => hangout.friend_id);
+      const oldFriendsSet = new Set(oldFriends);
+      const newFriendsSet = new Set(newFriends);
+      const friendsToAdd = Array.from(
+        setDifference(newFriendsSet, oldFriendsSet),
+      );
+      const friendsToRemove = Array.from(
+        setDifference(oldFriendsSet, newFriendsSet),
+      );
+      const rowsToAdd = friendsToAdd.map((friend_id) => ({
+        friend_id,
+        hangout_id: hangoutId,
+      }));
+      if (rowsToAdd.length) {
+        await trx.insertInto("friend_hangout").values(rowsToAdd).execute();
+      }
+      if (friendsToRemove.length) {
+        await trx
+          .deleteFrom("friend_hangout")
+          .where("hangout_id", "=", hangoutId)
+          .where("friend_id", "in", friendsToRemove)
+          .execute();
+      }
+
+      // Update the other columns
+      const hangoutUpdate3 = {
+        ...hangoutUpdate2,
+        hangout_date,
+      };
+      await trx
+        .updateTable("hangout")
+        .set(hangoutUpdate3)
+        .where("id", "=", hangoutId)
+        .execute();
     });
   }
 
@@ -177,4 +242,15 @@ export class Repository {
       ])
       .execute();
   }
+}
+
+// todo Use built-in Set.difference() -- need to change some config to enable this
+function setDifference<T>(set1: Set<T>, set2: Set<T>): Set<T> {
+  const result = new Set<T>();
+  for (const item of set1) {
+    if (!set2.has(item)) {
+      result.add(item);
+    }
+  }
+  return result;
 }

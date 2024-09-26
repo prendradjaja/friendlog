@@ -6,6 +6,7 @@ import {
   NewHangout,
   Hangout,
   CreateFriendResponse,
+  HangoutUpdate,
 } from "shared";
 import { baseUrl } from "./base-url";
 
@@ -44,7 +45,7 @@ export function createMyFriend(
   });
 }
 
-export function getMyHangouts(): Promise<Hangout[]> {
+export async function getMyHangouts(): Promise<Hangout[]> {
   return myFetch("/api/me/hangouts");
 }
 
@@ -61,6 +62,23 @@ export function createMyHangout(newHangout: NewHangout): Promise<{}> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newHangout),
+  });
+}
+
+export function getHangout(hangoutId: number): Promise<Hangout> {
+  return myFetch("/api/me/hangouts/" + hangoutId);
+}
+
+export function updateHangout(
+  hangoutId: number,
+  hangoutUpdate: HangoutUpdate,
+): Promise<{}> {
+  return myFetch("/api/me/hangouts/" + hangoutId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(hangoutUpdate),
   });
 }
 

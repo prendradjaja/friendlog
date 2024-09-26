@@ -1,16 +1,33 @@
 import { useRef, useMemo, useState } from "react";
 import * as api from "./api";
-import { Friend } from "shared";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import StyleWrapper from "./CreateHangoutPage.styles";
+import { Hangout, Friend } from "shared";
+import {
+  useLoaderData,
+  useNavigate,
+  LoaderFunctionArgs,
+} from "react-router-dom";
+import StyleWrapper from "./EditHangoutPage.styles";
 import { Button, Heading, TextField } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
+import { UnreachableCaseError, Prettify } from "ts-essentials";
 
-interface LoaderData {
-  allFriends: Friend[];
-}
+type LoaderData = Prettify<
+  {
+    allFriends: Friend[];
+  } & (
+    | {
+        mode: "edit";
+        hangout: Hangout;
+        hangoutId: number;
+      }
+    | {
+        mode: "create";
+        hangout: undefined;
+      }
+  )
+>;
 
 // todo Move Select stuff into a separate component?
 interface KnownSelectOption {
@@ -37,8 +54,9 @@ const Input = (props: InputProps<SelectOption>) => {
   return <components.Input {...props} enterKeyHint="enter" />;
 };
 
-export function CreateHangoutPage() {
-  const { allFriends } = useLoaderData() as LoaderData;
+export function EditHangoutPage() {
+  const loaderData = useLoaderData() as LoaderData;
+  const { allFriends, hangout, mode } = loaderData;
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -48,7 +66,14 @@ export function CreateHangoutPage() {
         friend,
       }) satisfies KnownSelectOption,
   );
-  const [friends, setFriends] = useState<readonly SelectOption[]>([]);
+  const hangoutFriendIds = hangout
+    ? hangout.friends.map((friend) => friend.id)
+    : [];
+  const defaultSelectValue = selectOptions.filter((option) =>
+    hangoutFriendIds.includes(option.friend.id),
+  );
+  const [friends, setFriends] =
+    useState<readonly SelectOption[]>(defaultSelectValue);
 
   const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
@@ -59,7 +84,7 @@ export function CreateHangoutPage() {
 
   const navigate = useNavigate();
 
-  async function handleAdd() {
+  async function handleSave() {
     setSaving(true);
 
     const existingFriendIds = friends
@@ -80,18 +105,26 @@ export function CreateHangoutPage() {
 
     const friendIds = [...existingFriendIds, ...createdFriendIds];
 
-    await api.createMyHangout({
+    const payload = {
       title,
       hangout_date_string,
       description: "",
       friends: friendIds,
-    });
+    };
+    if (loaderData.mode === "create") {
+      await api.createMyHangout(payload);
+    } else if (loaderData.mode === "edit") {
+      await api.updateHangout(loaderData.hangoutId, payload);
+    } else {
+      throw new UnreachableCaseError(loaderData);
+    }
+
     navigate("/");
   }
 
   return (
     <StyleWrapper>
-      <Heading as="h1">Create hangout</Heading>
+      <Heading as="h1">{hangout ? "Edit hangout" : "Create hangout"}</Heading>
 
       <Heading as="h2" size="3">
         Who
@@ -100,7 +133,7 @@ export function CreateHangoutPage() {
         closeMenuOnSelect={false}
         blurInputOnSelect={false}
         isMulti
-        defaultValue={[] as SelectOption[]}
+        defaultValue={defaultSelectValue}
         value={friends}
         options={selectOptions}
         onChange={setFriends}
@@ -120,23 +153,42 @@ export function CreateHangoutPage() {
       <Heading as="h2" size="3">
         What
       </Heading>
-      <TextField.Root ref={titleRef} placeholder="e.g. Coffee at Timeless" />
+      <TextField.Root
+        ref={titleRef}
+        placeholder="e.g. Coffee at Timeless"
+        defaultValue={hangout?.title}
+      />
 
       <Heading as="h2" size="3">
         When
       </Heading>
-      <input ref={dateRef} type="date" defaultValue={today} />
+      <input
+        ref={dateRef}
+        type="date"
+        defaultValue={hangout?.hangout_date_string ?? today}
+      />
 
       <div className="button-container">
-        <Button onClick={handleAdd} disabled={saving}>
-          Add
+        <Button onClick={handleSave} disabled={saving}>
+          {mode === "create" ? "Add" : "Save"}
         </Button>
       </div>
     </StyleWrapper>
   );
 }
 
-CreateHangoutPage.loader = async (): Promise<LoaderData> => {
-  const allFriends = await api.getMyFriends();
-  return { allFriends };
+EditHangoutPage.loader = async ({
+  params,
+}: LoaderFunctionArgs): Promise<LoaderData> => {
+  const hangoutId: string | undefined = params.hangoutId;
+  if (hangoutId !== undefined) {
+    const [allFriends, hangout] = await Promise.all([
+      api.getMyFriends(),
+      api.getHangout(+hangoutId),
+    ]);
+    return { allFriends, mode: "edit", hangout, hangoutId: +hangoutId };
+  } else {
+    const allFriends = await api.getMyFriends();
+    return { allFriends, mode: "create", hangout: undefined };
+  }
 };
