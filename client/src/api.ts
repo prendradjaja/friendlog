@@ -9,6 +9,15 @@ import {
   HangoutUpdate,
 } from "shared";
 import { baseUrl } from "./base-url";
+import { getEncryptionKey } from "./encryption/encryption-key-store";
+import {
+  decryptHangout,
+  decryptFriend,
+  encryptFriendUpdate,
+  encryptHangoutUpdate,
+} from "./encryption/encrypt-data";
+
+const encryptionKey = getEncryptionKey();
 
 async function myFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(baseUrl + path, options);
@@ -29,56 +38,68 @@ export function getExampleMessageById(
   return myFetch("/api/example-messages/" + messageId);
 }
 
-export function getMyFriends(): Promise<MyFriendsResponse> {
-  return myFetch("/api/me/friends");
+export async function getMyFriends(): Promise<MyFriendsResponse> {
+  const friends = await myFetch<MyFriendsResponse>("/api/me/friends");
+  return friends.map((friend) => decryptFriend(friend, encryptionKey));
 }
 
 export function createMyFriend(
   newFriend: NewFriend,
 ): Promise<CreateFriendResponse> {
+  const newFriendEncrypted = encryptFriendUpdate(newFriend, encryptionKey);
   return myFetch("/api/me/friends", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(newFriend),
+    body: JSON.stringify(newFriendEncrypted),
   });
 }
 
 export async function getMyHangouts(): Promise<Hangout[]> {
-  return myFetch("/api/me/hangouts");
+  const hangouts = await myFetch<Hangout[]>("/api/me/hangouts");
+  return hangouts.map((hangout) => decryptHangout(hangout, encryptionKey));
 }
 
-export function getMyHangoutsWithOneFriend(
+export async function getMyHangoutsWithOneFriend(
   friendId: number,
 ): Promise<Hangout[]> {
-  return myFetch(`/api/me/friends/${friendId}/hangouts`);
+  const hangouts = await myFetch<Hangout[]>(
+    `/api/me/friends/${friendId}/hangouts`,
+  );
+  return hangouts.map((hangout) => decryptHangout(hangout, encryptionKey));
 }
 
 export function createMyHangout(newHangout: NewHangout): Promise<{}> {
+  const newHangoutEncrypted = encryptHangoutUpdate(newHangout, encryptionKey);
   return myFetch("/api/me/hangouts", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(newHangout),
+    body: JSON.stringify(newHangoutEncrypted),
   });
 }
 
-export function getHangout(hangoutId: number): Promise<Hangout> {
-  return myFetch("/api/me/hangouts/" + hangoutId);
+export async function getHangout(hangoutId: number): Promise<Hangout> {
+  const hangout = await myFetch<Hangout>("/api/me/hangouts/" + hangoutId);
+  return decryptHangout(hangout, encryptionKey);
 }
 
 export function updateHangout(
   hangoutId: number,
   hangoutUpdate: HangoutUpdate,
 ): Promise<{}> {
+  const hangoutUpdateEncrypted = encryptHangoutUpdate(
+    hangoutUpdate,
+    encryptionKey,
+  );
   return myFetch("/api/me/hangouts/" + hangoutId, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(hangoutUpdate),
+    body: JSON.stringify(hangoutUpdateEncrypted),
   });
 }
 

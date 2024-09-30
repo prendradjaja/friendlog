@@ -13,6 +13,11 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import StyleWrapper from "./HangoutsPage.styles";
 import { getLoginStatus } from "./login-status-store";
 import { HangoutCard } from "./HangoutCard";
+import { useMemo } from "react";
+import {
+  getEncryptionKey,
+  setEncryptionKey,
+} from "./encryption/encryption-key-store";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -22,9 +27,19 @@ interface LoaderData {
 export function HangoutsPage() {
   const { hangouts, loginStatus } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
+  const encryptionKey = useMemo(getEncryptionKey, []);
 
   function handleAddHangout() {
     navigate("/hangouts/new");
+  }
+
+  function handleSetEncryptionKey() {
+    const newKey = prompt("Enter a new key or leave blank to cancel");
+    if (!newKey) {
+      return;
+    }
+    setEncryptionKey(newKey);
+    location.reload();
   }
 
   return (
@@ -33,6 +48,11 @@ export function HangoutsPage() {
         <Link asChild weight="bold" size="6">
           <RouterLink to="/">Friendlog</RouterLink>
         </Link>
+        <div>
+          <Button size="1" variant="outline" onClick={handleSetEncryptionKey}>
+            Set encryption key (current is {encryptionKey})
+          </Button>
+        </div>
       </div>
 
       {hangouts.map((hangout) => (
