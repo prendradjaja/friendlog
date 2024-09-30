@@ -1,4 +1,4 @@
-import { encrypt, decrypt } from "./encryption";
+import { encrypt, decrypt } from "./encrypt-string";
 
 function main() {
   testCiphertext();
