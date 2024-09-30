@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AnonHomePage } from "./AnonHomePage";
 import { HangoutsPage } from "./HangoutsPage";
 import { DevtoolsPage } from "./DevtoolsPage";
+import { SettingsPage } from "./SettingsPage";
 import { SandboxPage } from "./SandboxPage";
 import { EditHangoutPage } from "./EditHangoutPage";
 import { Theme } from "@radix-ui/themes";
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
     path: "/hangouts/:hangoutId/edit",
     element: <EditHangoutPage />,
     loader: EditHangoutPage.loader,
+  },
+  {
+    path: "/settings",
+    element: <SettingsPage />,
   },
   {
     path: "/devtools",
