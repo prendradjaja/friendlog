@@ -5,6 +5,7 @@ import "@radix-ui/themes/styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AnonHomePage } from "./AnonHomePage";
 import { HangoutsPage } from "./HangoutsPage";
+import { EditFriendPage } from "./EditFriendPage";
 import { DevtoolsPage } from "./DevtoolsPage";
 import { SettingsPage } from "./SettingsPage";
 import { SandboxPage } from "./SandboxPage";
@@ -26,6 +27,11 @@ const router = createBrowserRouter([
     path: "/friends/:friendId",
     element: <HangoutsPage />,
     loader: HangoutsPage.loader,
+  },
+  {
+    path: "/friends/:friendId/edit",
+    element: <EditFriendPage />,
+    loader: EditFriendPage.loader,
   },
   {
     path: "/hangouts/new",
