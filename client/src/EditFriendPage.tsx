@@ -1,9 +1,14 @@
 import StyleWrapper from "./EditFriendPage.styles";
-import { useLoaderData, LoaderFunctionArgs, redirect } from "react-router-dom";
+import {
+  useLoaderData,
+  LoaderFunctionArgs,
+  useNavigate,
+} from "react-router-dom";
 import { getMyFriends } from "./api";
 import { Friend } from "shared";
 import { useState } from "react";
 import { Heading, Text, TextField, Button } from "@radix-ui/themes";
+import { updateFriend } from "./api";
 
 interface LoaderData {
   friend: Friend;
@@ -12,8 +17,16 @@ interface LoaderData {
 export function EditFriendPage() {
   const { friend } = useLoaderData() as LoaderData;
   const [name, setName] = useState(friend.name);
+  const [saving, setSaving] = useState(false);
 
-  async function handleSave(): Promise<void> {}
+  const navigate = useNavigate();
+
+  async function handleSave(): Promise<void> {
+    const friendUpdate = { name };
+    setSaving(true);
+    await updateFriend(friend.id, friendUpdate);
+    navigate("/");
+  }
 
   return (
     <StyleWrapper>
@@ -23,7 +36,9 @@ export function EditFriendPage() {
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
-      <Button onClick={handleSave}>Save</Button>
+      <Button onClick={handleSave} disabled={saving}>
+        Save
+      </Button>
     </StyleWrapper>
   );
 }

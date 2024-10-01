@@ -1,4 +1,11 @@
-import { Hangout, NewFriend, Friend, NewHangout, HangoutUpdate } from "shared";
+import {
+  Hangout,
+  NewFriend,
+  Friend,
+  NewHangout,
+  HangoutUpdate,
+  FriendUpdate,
+} from "shared";
 import { encrypt, decrypt } from "./encrypt-string";
 
 export function encryptHangoutUpdate(
@@ -19,7 +26,10 @@ export function decryptHangout(hangout: Hangout, key: string): Hangout {
   };
 }
 
-export function encryptFriendUpdate(friend: NewFriend, key: string): NewFriend {
+export function encryptFriendUpdate(
+  friend: FriendUpdate | NewFriend,
+  key: string,
+): FriendUpdate | NewFriend {
   return {
     ...friend,
     name: encrypt(friend.name, key),
