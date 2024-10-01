@@ -17,6 +17,7 @@ export interface ExampleMessage {
 
 export type Friend = db.Friend;
 export type NewFriend = Pick<db.NewFriend, "name">;
+export type FriendUpdate = Pick<db.NewFriend, "name">;
 
 export type Hangout = Prettify<
   Omit<db.Hangout, "hangout_date"> & {

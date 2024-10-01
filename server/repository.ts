@@ -1,7 +1,13 @@
 import { Kysely, sql } from "kysely";
 import { DB } from "./database-types";
 import * as db from "./database-types";
-import { Hangout, HangoutUpdate, NewFriend, NewHangout } from "shared";
+import {
+  FriendUpdate,
+  Hangout,
+  HangoutUpdate,
+  NewFriend,
+  NewHangout,
+} from "shared";
 import { databaseConfig } from "./database";
 
 export class Repository {
@@ -23,6 +29,20 @@ export class Repository {
       .selectAll()
       .where("id", "=", friendId)
       .executeTakeFirstOrThrow();
+  }
+
+  public updateFriend(
+    userId: number,
+    friendId: number,
+    friendUpdate: FriendUpdate,
+  ): Promise<void> {
+    return this.db
+      .updateTable("friend")
+      .set(friendUpdate)
+      .where("id", "=", friendId)
+      .where("owner_id", "=", userId)
+      .execute()
+      .then(() => {});
   }
 
   public createMyFriend(userId: number, newFriend: NewFriend) {

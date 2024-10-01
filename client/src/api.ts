@@ -7,6 +7,7 @@ import {
   Hangout,
   CreateFriendResponse,
   HangoutUpdate,
+  FriendUpdate,
 } from "shared";
 import { baseUrl } from "./base-url";
 import { getEncryptionKey } from "./encryption/encryption-key-store";
@@ -53,6 +54,23 @@ export function createMyFriend(
       "Content-Type": "application/json",
     },
     body: JSON.stringify(newFriendEncrypted),
+  });
+}
+
+export function updateFriend(
+  friendId: number,
+  friendUpdate: FriendUpdate,
+): Promise<void> {
+  const friendUpdateEncrypted = encryptFriendUpdate(
+    friendUpdate,
+    encryptionKey,
+  );
+  return myFetch(`/api/me/friends/${friendId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(friendUpdateEncrypted),
   });
 }
 
