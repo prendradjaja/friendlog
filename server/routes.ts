@@ -15,6 +15,7 @@ import {
 } from "shared";
 import { ensureLoggedIn, getUserId } from "./authentication";
 import { unflattenHangouts } from "./routes.helpers";
+import { isInvalidHangout } from "shared/validators";
 
 export function createAPIRoutes(config: Config, repo: Repository) {
   const router = Router();
@@ -102,8 +103,13 @@ export function createAPIRoutes(config: Config, repo: Repository) {
   router.post("/me/hangouts", async (req, res) => {
     const userId = getUserId(req);
     const newHangout: NewHangout = req.body;
-    await repo.createMyHangout(userId, newHangout);
-    res.json({});
+    const validationError = isInvalidHangout(newHangout);
+    if (validationError) {
+      res.status(400).json(validationError);
+    } else {
+      await repo.createMyHangout(userId, newHangout);
+      res.json({});
+    }
   });
 
   router.get("/me/hangouts/:hangoutId", async (req, res) => {
@@ -123,8 +129,13 @@ export function createAPIRoutes(config: Config, repo: Repository) {
     const userId = getUserId(req);
     const hangoutId = +req.params.hangoutId;
     const hangoutUpdate: HangoutUpdate = req.body;
-    await repo.updateHangout(userId, hangoutId, hangoutUpdate);
-    res.json({});
+    const validationError = isInvalidHangout(hangoutUpdate);
+    if (validationError) {
+      res.status(400).json(validationError);
+    } else {
+      await repo.updateHangout(userId, hangoutId, hangoutUpdate);
+      res.json({});
+    }
   });
 
   router.delete("/me/hangouts/:hangoutId", async (req, res) => {

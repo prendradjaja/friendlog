@@ -12,6 +12,7 @@ import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
+import { isValidationError } from "shared/validators";
 
 type LoaderData = Prettify<
   {
@@ -111,15 +112,25 @@ export function EditHangoutPage() {
       description: "",
       friends: friendIds,
     };
+
+    let sendApiCall: () => Promise<{}>;
     if (loaderData.mode === "create") {
-      await api.createMyHangout(payload);
+      sendApiCall = () => api.createMyHangout(payload);
     } else if (loaderData.mode === "edit") {
-      await api.updateHangout(loaderData.hangoutId, payload);
+      sendApiCall = () => api.updateHangout(loaderData.hangoutId, payload);
     } else {
       throw new UnreachableCaseError(loaderData);
     }
 
-    navigate("/");
+    api.createMyHangout(payload).then(
+      () => navigate("/"),
+      (error) => {
+        setSaving(false);
+        if (isValidationError(error)) {
+          alert(error.message);
+        }
+      },
+    );
   }
 
   return (
