@@ -14,6 +14,7 @@ import { InputProps, components } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
+import { encodeNewlines, decodeNewlines } from "./encode-newlines";
 
 type LoaderData = Prettify<
   {
@@ -59,7 +60,9 @@ const Input = (props: InputProps<SelectOption>) => {
 export function EditHangoutPage() {
   const loaderData = useLoaderData() as LoaderData;
   const { allFriends, hangout, mode } = loaderData;
-  const [title, setTitle] = useState(hangout?.title ?? "");
+  const [title, setTitle] = useState(
+    hangout ? decodeNewlines(hangout.title) : "",
+  );
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -107,7 +110,7 @@ export function EditHangoutPage() {
     const friendIds = [...existingFriendIds, ...createdFriendIds];
 
     const payload = {
-      title,
+      title: encodeNewlines(title),
       hangout_date_string,
       description: "",
       friends: friendIds,

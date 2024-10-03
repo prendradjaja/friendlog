@@ -9,6 +9,7 @@ import * as React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatRelative } from "./date-util";
+import { decodeNewlines } from "./encode-newlines";
 
 interface Props {
   hangout: Hangout;
@@ -106,7 +107,7 @@ export function HangoutCard({ hangout }: Props) {
           {formatRelative(hangout.hangout_date_string)}
         </Text>
         <Text as="div" className="body">
-          {hangout.title}
+          {decodeNewlines(hangout.title)}
         </Text>
       </div>
       {deleteModal}
