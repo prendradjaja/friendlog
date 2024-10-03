@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useRef } from "react";
+import { useState, ChangeEvent } from "react";
 import StyleWrapper, { verticalPadding } from "./GrowableTextarea.styles";
 
 interface Props {
@@ -12,17 +12,14 @@ interface Props {
  */
 export function GrowableTextarea({ placeholder }: Props) {
   const [value, setValue] = useState("");
-  const ref = useRef<HTMLTextAreaElement>(null);
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const textarea = event.target;
     setValue(textarea.value);
-    updateHeight();
+    updateHeight(textarea);
   }
 
-  function updateHeight(): void {
-    const textarea = ref.current!;
-
+  function updateHeight(textarea: HTMLTextAreaElement): void {
     textarea.style.height = "";
 
     const newHeight = textarea.scrollHeight - 2 * verticalPadding;
@@ -34,7 +31,6 @@ export function GrowableTextarea({ placeholder }: Props) {
       <textarea
         className="growable-textarea"
         placeholder={placeholder ?? ""}
-        ref={ref}
         rows={1}
         value={value}
         onChange={handleChange}
