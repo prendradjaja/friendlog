@@ -21,5 +21,6 @@ export default styled.div`
 
   .body {
     line-height: 1.35;
+    white-space: pre-line;
   }
 `;
