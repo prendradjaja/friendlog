@@ -13,6 +13,7 @@ import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
+import { GrowableTextarea } from "./GrowableTextarea";
 
 type LoaderData = Prettify<
   {
@@ -171,6 +172,7 @@ export function EditHangoutPage() {
         placeholder="e.g. Coffee at Timeless"
         defaultValue={hangout?.title}
       />
+      <GrowableTextarea placeholder="e.g. We walked to the park" />
 
       <Heading as="h2" size="3">
         When
