@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useRef, useEffect } from "react";
 import StyleWrapper, { verticalPadding } from "./GrowableTextarea.styles";
 
 interface Props {
@@ -13,27 +13,27 @@ interface Props {
  * To set a max height, add a CSS max-height to the .growable-textarea element.
  */
 export function GrowableTextarea({ value, onChange, placeholder }: Props) {
-  function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    const textarea = event.target;
-    onChange(textarea.value);
-    updateHeight(textarea);
-  }
+  const ref = useRef<HTMLTextAreaElement>(null);
 
-  function updateHeight(textarea: HTMLTextAreaElement): void {
+  function updateHeight(): void {
+    const textarea = ref.current!;
     textarea.style.height = "";
 
     const newHeight = textarea.scrollHeight - 2 * verticalPadding;
     textarea.style.height = newHeight + "px";
   }
 
+  useEffect(updateHeight);
+
   return (
     <StyleWrapper>
       <textarea
+        ref={ref}
         className="growable-textarea"
         placeholder={placeholder ?? ""}
         rows={1}
         value={value}
-        onChange={handleChange}
+        onChange={(event) => onChange(event.target.value)}
       ></textarea>
     </StyleWrapper>
   );
