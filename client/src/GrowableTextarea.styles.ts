@@ -18,5 +18,10 @@ export default styled.div`
       Would require updating height calculations.
     */
     width: calc(100% - 2 * (${padding}px + ${borderWidth}px));
+
+    &:focus {
+      outline: var(--focus-8) 1px solid;
+      border-color: var(--focus-8);
+    }
   }
 `;
