@@ -95,7 +95,6 @@ export class Repository {
         ),
         "hangout.title",
         "hangout.owner_id",
-        "hangout.description",
 
         "friend.id as friend_id",
         "friend.name as friend_name",
