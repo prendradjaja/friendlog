@@ -59,12 +59,16 @@ export function setUpAuthentication(
   passport: PassportStatic,
 ) {
   const config = loadConfig();
-  const { googleClientID, googleClientSecret, clientDomainForOAuthCallback } =
-    config;
+  const {
+    googleClientID,
+    googleClientSecret,
+    clientDomainForOAuthCallback,
+    sessionSecret,
+  } = config;
 
   app.use(
     session({
-      secret: "keyboard cat",
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       store: new PGStore({

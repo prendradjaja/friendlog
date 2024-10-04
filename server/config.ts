@@ -16,6 +16,7 @@ export interface Config {
   googleClientID: string;
   googleClientSecret: string;
   clientDomainForOAuthCallback: string;
+  sessionSecret: string;
 }
 
 const loadDevConfig = (getSecret: GetSecretFunction) =>
@@ -31,6 +32,7 @@ const loadDevConfig = (getSecret: GetSecretFunction) =>
     googleClientID: getSecret("GOOGLE_CLIENT_ID"),
     googleClientSecret: getSecret("GOOGLE_CLIENT_SECRET"),
     clientDomainForOAuthCallback: "http://localhost:2200",
+    sessionSecret: "local dev session secret doesn't matter",
   }) satisfies Config;
 
 const loadProductionConfig: () => Config = () =>
@@ -46,6 +48,7 @@ const loadProductionConfig: () => Config = () =>
     googleClientID: getEnvironmentVariable("GOOGLE_CLIENT_ID"),
     googleClientSecret: getEnvironmentVariable("GOOGLE_CLIENT_SECRET"),
     clientDomainForOAuthCallback: "",
+    sessionSecret: getEnvironmentVariable("SESSION_SECRET"),
   }) satisfies Config;
 
 export function loadConfig(): Config {
