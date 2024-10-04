@@ -48,7 +48,6 @@ export interface FriendHangout {
 }
 
 export interface Hangout {
-  description: string;
   hangout_date: Timestamp;
   id: Generated<number>;
   owner_id: number;
