@@ -112,7 +112,6 @@ export function EditHangoutPage() {
     const payload = {
       title: encodeNewlines(title),
       hangout_date_string,
-      description: "",
       friends: friendIds,
     };
 
