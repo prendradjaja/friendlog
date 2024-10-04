@@ -13,6 +13,8 @@ import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
+import { GrowableTextarea } from "./GrowableTextarea";
+import { encodeNewlines, decodeNewlines } from "./encode-newlines";
 
 type LoaderData = Prettify<
   {
@@ -58,6 +60,9 @@ const Input = (props: InputProps<SelectOption>) => {
 export function EditHangoutPage() {
   const loaderData = useLoaderData() as LoaderData;
   const { allFriends, hangout, mode } = loaderData;
+  const [title, setTitle] = useState(
+    hangout ? decodeNewlines(hangout.title) : "",
+  );
   const selectOptions = allFriends.map(
     (friend) =>
       ({
@@ -76,7 +81,6 @@ export function EditHangoutPage() {
   const [friends, setFriends] =
     useState<readonly SelectOption[]>(defaultSelectValue);
 
-  const titleRef = useRef<HTMLInputElement>(null);
   const dateRef = useRef<HTMLInputElement>(null);
 
   const today = useMemo(getToday, []);
@@ -94,7 +98,6 @@ export function EditHangoutPage() {
     const friendNamesToCreate = friends
       .filter((option): option is NewSelectOption => option.__isNew__)
       .map((option) => option.value);
-    const title = titleRef.current!.value.trim();
     const hangout_date_string = dateRef.current!.value;
 
     // todo Can add a bulk-create endpoint or just parallelize
@@ -107,7 +110,7 @@ export function EditHangoutPage() {
     const friendIds = [...existingFriendIds, ...createdFriendIds];
 
     const payload = {
-      title,
+      title: encodeNewlines(title),
       hangout_date_string,
       description: "",
       friends: friendIds,
@@ -166,10 +169,10 @@ export function EditHangoutPage() {
       <Heading as="h2" size="3">
         What
       </Heading>
-      <TextField.Root
-        ref={titleRef}
-        placeholder="e.g. Coffee at Timeless"
-        defaultValue={hangout?.title}
+      <GrowableTextarea
+        value={title}
+        onChange={setTitle}
+        placeholder="e.g. We walked to the park"
       />
 
       <Heading as="h2" size="3">
