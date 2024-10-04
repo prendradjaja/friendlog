@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useRef, useEffect } from "react";
+import { ChangeEvent, useRef, useEffect } from "react";
 import StyleWrapper, { verticalPadding } from "./GrowableTextarea.styles";
 
 interface Props {

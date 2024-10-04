@@ -136,8 +136,6 @@ export function EditHangoutPage() {
     );
   }
 
-  function handleWhatChange(what: string) {}
-
   return (
     <StyleWrapper>
       <Heading as="h1">
