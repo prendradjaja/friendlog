@@ -11,6 +11,8 @@ interface Props {
  * A textarea that automatically expands its height as the user types.
  *
  * To set a max height, add a CSS max-height to the .growable-textarea element.
+ *
+ * (Consider using a package e.g. react-textarea-autosize instead)
  */
 export function GrowableTextarea({ value, onChange, placeholder }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
