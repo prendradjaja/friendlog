@@ -206,7 +206,7 @@ EditHangoutPage.loader = async ({
     ]);
     return { allFriends, mode: "edit", hangout, hangoutId: +hangoutId };
   } else {
-    // const allFriends = await api.getMyFriends();
-    return { allFriends: [], mode: "create", hangout: undefined };
+    const allFriends = await api.getMyFriends();
+    return { allFriends, mode: "create", hangout: undefined };
   }
 };
