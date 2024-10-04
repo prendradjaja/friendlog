@@ -125,7 +125,7 @@ export function EditHangoutPage() {
       throw new UnreachableCaseError(loaderData);
     }
 
-    api.createMyHangout(payload).then(
+    sendApiCall().then(
       () => navigate("/"),
       (error) => {
         setSaving(false);
