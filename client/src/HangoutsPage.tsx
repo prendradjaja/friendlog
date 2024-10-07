@@ -15,11 +15,14 @@ import { getLoginStatus } from "./login-status-store";
 import { HangoutCard } from "./HangoutCard";
 import { useMemo } from "react";
 import { getEncryptionKey } from "./encryption/encryption-key-store";
+import { KeyboardListener } from "./KeyboardListener";
 
 interface LoaderData {
   hangouts: Hangout[];
   loginStatus: LoginStatus;
 }
+
+const createHangoutUrl = "/hangouts/new";
 
 export function HangoutsPage() {
   const { hangouts, loginStatus } = useLoaderData() as LoaderData;
@@ -27,7 +30,13 @@ export function HangoutsPage() {
   const encryptionKey = useMemo(getEncryptionKey, []);
 
   function handleAddHangout() {
-    navigate("/hangouts/new");
+    navigate(createHangoutUrl);
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === "c") {
+      navigate(createHangoutUrl);
+    }
   }
 
   return (
@@ -61,6 +70,7 @@ export function HangoutsPage() {
       >
         <PlusIcon width="30" height="30" />
       </IconButton>
+      <KeyboardListener onKeyDown={handleKeyDown} />
     </StyleWrapper>
   );
 }
