@@ -15,6 +15,7 @@ import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
 import { encodeNewlines, decodeNewlines } from "./encode-newlines";
+import { sortBy } from "./util";
 
 type LoaderData = Prettify<
   {
@@ -63,7 +64,8 @@ export function EditHangoutPage() {
   const [title, setTitle] = useState(
     hangout ? decodeNewlines(hangout.title) : "",
   );
-  const selectOptions = allFriends.map(
+  const friendsAlphabetical = sortBy(allFriends, (x) => x.name);
+  const selectOptions = friendsAlphabetical.map(
     (friend) =>
       ({
         __isNew__: false,

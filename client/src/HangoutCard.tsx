@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatRelative } from "./date-util";
 import { decodeNewlines } from "./encode-newlines";
+import { sortBy } from "./util";
 
 interface Props {
   hangout: Hangout;
@@ -31,7 +32,8 @@ export function HangoutCard({ hangout }: Props) {
     navigate("/home"); // Refresh HangoutsPage
   }
 
-  const friendNames = hangout.friends.map((friend, i, friends) => (
+  const friendsAlphabetical = sortBy(hangout.friends, (x) => x.name);
+  const friendNames = friendsAlphabetical.map((friend, i, friends) => (
     <React.Fragment key={friend.id}>
       <Link asChild weight="bold">
         <RouterLink to={"/friends/" + friend.id}>{friend.name}</RouterLink>
