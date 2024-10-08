@@ -53,13 +53,6 @@ export function HangoutsPage() {
         <HangoutCard key={hangout.id} hangout={hangout} />
       ))}
 
-      <form method="post" action="/logout">
-        <Button type="submit" size="1" variant="outline">
-          Log out{" "}
-          {loginStatus.isLoggedIn ? loginStatus.user.name : "(Not logged in)"}
-        </Button>
-      </form>
-
       {/* todo Maybe use a link instead of a button. Would have to do it myself: Radix Themes
       doesn't have such a "link that looks like a button" component. */}
       {/* todo Maybe make it bigger. Would have to do it myself: This is the max size for the Radix
