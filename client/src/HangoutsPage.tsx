@@ -16,6 +16,7 @@ import { HangoutCard } from "./HangoutCard";
 import { useMemo } from "react";
 import { getEncryptionKey } from "./encryption/encryption-key-store";
 import { KeyboardListener } from "./KeyboardListener";
+import { NavMenu } from "./NavMenu";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -45,6 +46,9 @@ export function HangoutsPage() {
         <Link asChild weight="bold" size="6">
           <RouterLink to="/">Friendlog</RouterLink>
         </Link>
+        {/*
+        <NavMenu />
+        */}
       </div>
 
       {hangouts.map((hangout) => (

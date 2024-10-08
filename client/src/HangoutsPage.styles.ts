@@ -4,6 +4,8 @@ export default styled.div`
 
   .header {
     margin-bottom: var(--space-3);
+    display: flex;
+    justify-content: space-between;
   }
 
   .rt-Card {
