@@ -7,7 +7,7 @@ export function NavMenu() {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <IconButton size="3" variant="ghost">
+        <IconButton size="2" variant="ghost">
           <HamburgerMenuIcon width="30" height="30" />
         </IconButton>
       </DropdownMenu.Trigger>
