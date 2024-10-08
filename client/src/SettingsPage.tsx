@@ -28,21 +28,21 @@ function EncryptionSettings() {
     <StyleWrapper>
       <Heading>Settings</Heading>
       <Text>
-        Encryption key:{" "}
-        {/* Using <pre> instead of <span> in case the key has a space in it */}
-        {hidden ? (
-          <pre className="hidden-key">(hidden)</pre>
-        ) : (
-          <pre className="visible-key">{key}</pre>
-        )}
-      </Text>
-      <div>
+        Encryption key:
         <Button size="1" onClick={() => setHidden((hidden) => !hidden)}>
           {hidden ? "Show" : "Hide"}
         </Button>
         <Button size="1" onClick={handleChange}>
           Change
         </Button>
+      </Text>
+      {/* Using <pre> instead of <span> in case the key has a space in it */}
+      <div>
+        {hidden ? (
+          <pre className="hidden-key">(hidden)</pre>
+        ) : (
+          <pre className="visible-key">{key}</pre>
+        )}
       </div>
     </StyleWrapper>
   );

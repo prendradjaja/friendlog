@@ -7,7 +7,7 @@ export default styled.div`
   }
 
   button {
-    margin-right: var(--space-2);
+    margin-left: var(--space-2);
   }
 
   .hidden-key,

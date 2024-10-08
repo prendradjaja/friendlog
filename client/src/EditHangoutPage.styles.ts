@@ -3,7 +3,7 @@ export default styled.div`
   padding: 10px;
 
   h2 {
-    margin-top: var(--space-3);
+    margin-top: var(--space-4);
   }
 
   .button-container {
