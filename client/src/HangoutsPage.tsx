@@ -46,9 +46,7 @@ export function HangoutsPage() {
         <Link asChild weight="bold" size="6">
           <RouterLink to="/">Friendlog</RouterLink>
         </Link>
-        {/*
         <NavMenu />
-        */}
       </div>
 
       {hangouts.map((hangout) => (

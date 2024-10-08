@@ -1,5 +1,6 @@
 import { IconButton, Button, DropdownMenu } from "@radix-ui/themes";
 import { PlusIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { Link as RouterLink } from "react-router-dom";
 
 export function NavMenu() {
   return (
@@ -10,12 +11,14 @@ export function NavMenu() {
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onSelect={() => alert("Hello example 1")}>
-          Example 1
+        <DropdownMenu.Item asChild>
+          <RouterLink to="/settings">Settings</RouterLink>
         </DropdownMenu.Item>
+        {/*
         <DropdownMenu.Item onSelect={() => alert("Hello example 2")}>
           Example 2
         </DropdownMenu.Item>
+        */}
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
