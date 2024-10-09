@@ -3,7 +3,6 @@ export default styled.div`
   > div {
     border: 1px solid var(--gray-7);
     border-radius: var(--space-2);
-    margin-bottom: var(--space-3);
     padding: 10px;
   }
 

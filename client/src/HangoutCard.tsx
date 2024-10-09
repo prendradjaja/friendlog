@@ -96,7 +96,7 @@ export function HangoutCard({ hangout }: Props) {
   );
 
   return (
-    <StyleWrapper>
+    <StyleWrapper className="hangout-card">
       <div key={hangout.id}>
         <div className="hangout-header">
           <div>{friendNames}</div>

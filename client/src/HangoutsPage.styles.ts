@@ -1,12 +1,15 @@
 import styled from "styled-components";
 export default styled.div`
   padding: 10px;
-  padding-bottom: 0;
 
   .header {
     margin-bottom: var(--space-3);
     display: flex;
     justify-content: space-between;
+  }
+
+  .hangout-card:not(:last-child) {
+    margin-bottom: var(--space-3);
   }
 
   .floating-action-button {

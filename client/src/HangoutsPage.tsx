@@ -55,9 +55,11 @@ export function HangoutsPage() {
         <NavMenu />
       </div>
 
-      {hangouts.map((hangout) => (
-        <HangoutCard key={hangout.id} hangout={hangout} />
-      ))}
+      <div>
+        {hangouts.map((hangout) => (
+          <HangoutCard key={hangout.id} hangout={hangout} />
+        ))}
+      </div>
 
       {/* todo Maybe use a link instead of a button. Would have to do it myself: Radix Themes
       doesn't have such a "link that looks like a button" component. */}
