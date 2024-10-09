@@ -35,7 +35,13 @@ export function HangoutsPage() {
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === "c") {
+    if (
+      event.key === "c" &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey
+    ) {
       navigate(createHangoutUrl);
     }
   }
