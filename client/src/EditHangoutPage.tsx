@@ -16,6 +16,7 @@ import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
 import { encodeNewlines, decodeNewlines } from "./encode-newlines";
 import { sortBy } from "./util";
+import { KeyboardListener } from "./KeyboardListener";
 
 type LoaderData = Prettify<
   {
@@ -137,6 +138,27 @@ export function EditHangoutPage() {
     );
   }
 
+  function handleKeyDown(event: KeyboardEvent) {
+    if (
+      event.key === "s" &&
+      !event.altKey &&
+      event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey
+    ) {
+      handleSave();
+    } else if (
+      event.key === "s" &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      event.metaKey &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
+      handleSave();
+    }
+  }
+
   return (
     <StyleWrapper>
       <Heading as="h1">
@@ -190,6 +212,7 @@ export function EditHangoutPage() {
           {mode === "create" ? "Add" : "Save"}
         </Button>
       </div>
+      <KeyboardListener onKeyDown={handleKeyDown} />
     </StyleWrapper>
   );
 }
