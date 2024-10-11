@@ -6,6 +6,10 @@ export default styled.div`
     margin-bottom: var(--space-3);
     display: flex;
     justify-content: space-between;
+
+    .unlocked {
+      color: var(--gray-8);
+    }
   }
 
   .hangout-card:not(:last-child) {

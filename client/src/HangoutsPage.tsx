@@ -1,6 +1,6 @@
 import * as api from "./api";
 import { LoginStatus, Hangout } from "shared";
-import { Link } from "@radix-ui/themes";
+import { Link, Heading } from "@radix-ui/themes";
 import {
   LoaderFunctionArgs,
   Link as RouterLink,
@@ -14,7 +14,7 @@ import StyleWrapper from "./HangoutsPage.styles";
 import { getLoginStatus } from "./login-status-store";
 import { HangoutCard } from "./HangoutCard";
 import { useMemo } from "react";
-import { useEncryptionKey } from "./local-storage-items";
+import { useEncryptionKey, useIsUnlocked } from "./local-storage-items";
 import { KeyboardListener } from "./KeyboardListener";
 import { NavMenu } from "./NavMenu";
 
@@ -29,6 +29,11 @@ export function HangoutsPage() {
   const { hangouts, loginStatus } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
   const [encryptionKey, saveEncryptionKey] = useEncryptionKey();
+  const [isUnlocked, saveIsUnlocked] = useIsUnlocked();
+
+  const visibleHangouts = isUnlocked
+    ? hangouts
+    : hangouts.filter((hangout) => !hangout.private);
 
   function handleAddHangout() {
     navigate(createHangoutUrl);
@@ -49,14 +54,17 @@ export function HangoutsPage() {
   return (
     <StyleWrapper>
       <div className="header">
-        <Link asChild weight="bold" size="6">
-          <RouterLink to="/">Friendlog</RouterLink>
-        </Link>
+        <Heading>
+          <Link asChild>
+            <RouterLink to="/">Friendlog</RouterLink>
+          </Link>
+          {isUnlocked && <span className="unlocked">*</span>}
+        </Heading>
         <NavMenu />
       </div>
 
       <div>
-        {hangouts.map((hangout) => (
+        {visibleHangouts.map((hangout) => (
           <HangoutCard key={hangout.id} hangout={hangout} />
         ))}
       </div>
