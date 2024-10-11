@@ -15,3 +15,7 @@ export function getEncryptionKeySnapshot(): string {
   }
   return JSON.parse(item);
 }
+
+export function useIsUnlocked() {
+  return useLocalStorage(localStoragePrefix + "is-unlocked", false);
+}

@@ -1,10 +1,16 @@
 import StyleWrapper from "./SettingsPage.styles";
 import { Heading, Text, Button } from "@radix-ui/themes";
-import { useEncryptionKey } from "./local-storage-items";
+import { useEncryptionKey, useIsUnlocked } from "./local-storage-items";
 import { useState } from "react";
 
 export function SettingsPage() {
-  return <EncryptionSettings></EncryptionSettings>;
+  return (
+    <StyleWrapper>
+      <Heading>Settings</Heading>
+      <EncryptionSettings></EncryptionSettings>
+      <PrivateEntries></PrivateEntries>
+    </StyleWrapper>
+  );
 }
 
 function EncryptionSettings() {
@@ -21,8 +27,7 @@ function EncryptionSettings() {
   }
 
   return (
-    <StyleWrapper>
-      <Heading>Settings</Heading>
+    <div className="section">
       <Text>
         Encryption key:
         <Button size="1" onClick={() => setHidden((hidden) => !hidden)}>
@@ -40,6 +45,18 @@ function EncryptionSettings() {
           <pre className="visible-key">{encryptionKey}</pre>
         )}
       </div>
-    </StyleWrapper>
+    </div>
+  );
+}
+
+function PrivateEntries() {
+  const [isUnlocked, saveIsUnlocked] = useIsUnlocked();
+  return (
+    <div className="section">
+      <Text>Private entries:</Text>
+      <Button size="1" onClick={() => saveIsUnlocked(!isUnlocked)}>
+        {isUnlocked ? "Lock" : "Unlock"}
+      </Button>
+    </div>
   );
 }

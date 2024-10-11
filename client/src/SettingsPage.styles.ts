@@ -6,6 +6,10 @@ export default styled.div`
     margin-bottom: var(--space-4);
   }
 
+  .section {
+    margin-bottom: var(--space-3);
+  }
+
   button {
     margin-left: var(--space-2);
   }
