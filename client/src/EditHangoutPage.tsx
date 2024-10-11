@@ -116,6 +116,7 @@ export function EditHangoutPage() {
       title: encodeNewlines(title),
       hangout_date_string,
       friends: friendIds,
+      private: false, // todo Don't hardcode this to false
     };
 
     let sendApiCall: () => Promise<{}>;
