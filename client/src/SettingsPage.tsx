@@ -1,9 +1,6 @@
 import StyleWrapper from "./SettingsPage.styles";
 import { Heading, Text, Button } from "@radix-ui/themes";
-import {
-  getEncryptionKey,
-  setEncryptionKey,
-} from "./encryption/encryption-key-store";
+import { useEncryptionKey } from "./local-storage-items";
 import { useState } from "react";
 
 export function SettingsPage() {
@@ -11,7 +8,7 @@ export function SettingsPage() {
 }
 
 function EncryptionSettings() {
-  const [key, setKey] = useState(getEncryptionKey);
+  const [encryptionKey, saveEncryptionKey] = useEncryptionKey();
   const [hidden, setHidden] = useState(true);
 
   function handleChange() {
@@ -19,8 +16,7 @@ function EncryptionSettings() {
     if (!newKey) {
       return;
     }
-    setEncryptionKey(newKey);
-    setKey(newKey);
+    saveEncryptionKey(newKey);
     setHidden(false);
   }
 
@@ -41,7 +37,7 @@ function EncryptionSettings() {
         {hidden ? (
           <pre className="hidden-key">(hidden)</pre>
         ) : (
-          <pre className="visible-key">{key}</pre>
+          <pre className="visible-key">{encryptionKey}</pre>
         )}
       </div>
     </StyleWrapper>

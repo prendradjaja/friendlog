@@ -14,7 +14,7 @@ import StyleWrapper from "./HangoutsPage.styles";
 import { getLoginStatus } from "./login-status-store";
 import { HangoutCard } from "./HangoutCard";
 import { useMemo } from "react";
-import { getEncryptionKey } from "./encryption/encryption-key-store";
+import { useEncryptionKey } from "./local-storage-items";
 import { KeyboardListener } from "./KeyboardListener";
 import { NavMenu } from "./NavMenu";
 
@@ -28,7 +28,7 @@ const createHangoutUrl = "/hangouts/new";
 export function HangoutsPage() {
   const { hangouts, loginStatus } = useLoaderData() as LoaderData;
   const navigate = useNavigate();
-  const encryptionKey = useMemo(getEncryptionKey, []);
+  const [encryptionKey, saveEncryptionKey] = useEncryptionKey();
 
   function handleAddHangout() {
     navigate(createHangoutUrl);

@@ -10,7 +10,7 @@ import {
   FriendUpdate,
 } from "shared";
 import { baseUrl } from "./base-url";
-import { getEncryptionKey } from "./encryption/encryption-key-store";
+import { getEncryptionKeySnapshot } from "./local-storage-items";
 import {
   decryptHangout,
   decryptFriend,
@@ -18,7 +18,7 @@ import {
   encryptHangoutUpdate,
 } from "./encryption/encrypt-data";
 
-const encryptionKey = getEncryptionKey();
+const encryptionKey = getEncryptionKeySnapshot();
 
 async function myFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(baseUrl + path, options);
