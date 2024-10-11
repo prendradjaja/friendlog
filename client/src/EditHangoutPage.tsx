@@ -7,7 +7,7 @@ import {
   LoaderFunctionArgs,
 } from "react-router-dom";
 import StyleWrapper from "./EditHangoutPage.styles";
-import { Button, Heading, TextField } from "@radix-ui/themes";
+import { Button, Heading, TextField, Text } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
 import { InputProps, components } from "react-select";
@@ -85,6 +85,7 @@ export function EditHangoutPage() {
     useState<readonly SelectOption[]>(defaultSelectValue);
 
   const dateRef = useRef<HTMLInputElement>(null);
+  const [isPrivate, setIsPrivate] = useState(hangout ? hangout.private : false);
 
   const today = useMemo(getToday, []);
 
@@ -116,7 +117,7 @@ export function EditHangoutPage() {
       title: encodeNewlines(title),
       hangout_date_string,
       friends: friendIds,
-      private: false, // todo Don't hardcode this to false
+      private: isPrivate,
     };
 
     let sendApiCall: () => Promise<{}>;
@@ -207,6 +208,21 @@ export function EditHangoutPage() {
         type="date"
         defaultValue={hangout?.hangout_date_string ?? today}
       />
+
+      <Heading as="h2" size="3">
+        Privacy
+      </Heading>
+      <div className="checkbox-container">
+        <input
+          type="checkbox"
+          id="is-private-checkbox"
+          checked={isPrivate}
+          onChange={(event) => setIsPrivate(event.target.checked)}
+        />
+        <Text as="label" htmlFor="is-private-checkbox">
+          Private hangout
+        </Text>
+      </div>
 
       <div className="button-container">
         <Button onClick={handleSave} disabled={saving}>

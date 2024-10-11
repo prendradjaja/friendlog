@@ -13,4 +13,13 @@ export default styled.div`
   .growable-textarea {
     max-height: 100px;
   }
+
+  .checkbox-container {
+    display: flex;
+
+    input {
+      margin-left: 0;
+      margin-right: 5px;
+    }
+  }
 `;
