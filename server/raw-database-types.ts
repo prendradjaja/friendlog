@@ -51,6 +51,7 @@ export interface Hangout {
   hangout_date: Timestamp;
   id: Generated<number>;
   owner_id: number;
+  private: boolean;
   title: string;
 }
 
