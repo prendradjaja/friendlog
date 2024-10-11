@@ -23,6 +23,8 @@ export function HangoutCard({ hangout }: Props) {
 
   const navigate = useNavigate();
 
+  const namesColor = hangout.private ? "crimson" : undefined; // Use default link color
+
   async function handleSaveClick() {
     setIsDeleting(true);
     await api.deleteHangout(hangout.id);
@@ -35,7 +37,7 @@ export function HangoutCard({ hangout }: Props) {
   const friendsAlphabetical = sortBy(hangout.friends, (x) => x.name);
   const friendNames = friendsAlphabetical.map((friend, i, friends) => (
     <React.Fragment key={friend.id}>
-      <Link asChild weight="bold">
+      <Link asChild weight="bold" color={namesColor}>
         <RouterLink to={"/friends/" + friend.id}>{friend.name}</RouterLink>
       </Link>
       {i < friends.length - 1 && <Text>{", "}</Text>}
