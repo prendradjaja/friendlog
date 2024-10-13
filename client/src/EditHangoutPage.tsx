@@ -10,7 +10,7 @@ import StyleWrapper from "./EditHangoutPage.styles";
 import { Button, Heading, TextField, Text } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
-import { InputProps, components } from "react-select";
+import { InputProps, components, createFilter } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
@@ -175,6 +175,9 @@ export function EditHangoutPage() {
         blurInputOnSelect={false}
         isMulti
         defaultValue={defaultSelectValue}
+        filterOption={createFilter({
+          matchFrom: "start",
+        })}
         value={friends}
         options={selectOptions}
         onChange={setFriends}
