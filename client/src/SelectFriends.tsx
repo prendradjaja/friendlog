@@ -56,10 +56,14 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
     initialValue.existingFriendIds.includes(option.friend.id),
   );
   const [friends, setFriends] =
-    useState<readonly SelectOption[]>(defaultSelectValue);
+    useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
 
   function handleChange(newValue: readonly SelectOption[]) {
     setFriends(newValue);
+    // CONTINUE_HERE: newValue needs to be mapped to type Value (see commented-out code in EditHangoutPage.handleSave)
+    // - You'll also need to uncomment <SelectFriends> in EditHangoutPage
+    // - Which will also require adding an onChange over there
+    // - Does it matter which order we call setFriends and onChange?
     onChange(newValue);
   }
 
