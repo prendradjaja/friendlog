@@ -17,6 +17,8 @@ interface Profile {
 
 const PGStore = connectPGSimple(session);
 
+const dayInMilliseconds = 24 * 60 * 60 * 1000;
+
 /**
  * Check if the user is logged in; else give a 403 Forbidden.
  *
@@ -74,6 +76,9 @@ export function setUpAuthentication(
       store: new PGStore({
         pool: dbPool,
       }),
+      cookie: {
+        maxAge: 14 * dayInMilliseconds,
+      },
     }),
   );
   app.use(passport.authenticate("session"));
