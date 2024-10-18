@@ -2,6 +2,7 @@ import StyleWrapper from "./SettingsPage.styles";
 import { Heading, Text, Button } from "@radix-ui/themes";
 import { useEncryptionKey, useIsUnlocked } from "./local-storage-items";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function SettingsPage() {
   return (
@@ -51,10 +52,17 @@ function EncryptionSettings() {
 
 function PrivateEntries() {
   const [isUnlocked, saveIsUnlocked] = useIsUnlocked();
+  const navigate = useNavigate();
+
+  function toggleLocked() {
+    saveIsUnlocked(!isUnlocked);
+    navigate("/");
+  }
+
   return (
     <div className="section">
       <Text>Private entries:</Text>
-      <Button size="1" onClick={() => saveIsUnlocked(!isUnlocked)}>
+      <Button size="1" onClick={toggleLocked}>
         {isUnlocked ? "Lock" : "Unlock"}
       </Button>
     </div>
