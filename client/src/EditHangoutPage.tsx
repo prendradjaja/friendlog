@@ -171,6 +171,7 @@ export function EditHangoutPage() {
         Who
       </Heading>
       <CreatableSelect
+        autoFocus={mode === "create"}
         closeMenuOnSelect={false}
         blurInputOnSelect={false}
         isMulti
