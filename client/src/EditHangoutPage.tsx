@@ -7,7 +7,7 @@ import {
   LoaderFunctionArgs,
 } from "react-router-dom";
 import StyleWrapper from "./EditHangoutPage.styles";
-import { Button, Heading, TextField, Text } from "@radix-ui/themes";
+import { Button, Heading, TextField, Text, TextProps } from "@radix-ui/themes";
 import { getToday } from "./date-util";
 import CreatableSelect from "react-select/creatable";
 import { InputProps, components, createFilter } from "react-select";
@@ -92,6 +92,14 @@ export function EditHangoutPage() {
   const [saving, setSaving] = useState(false);
 
   const navigate = useNavigate();
+
+  let lengthIndicatorStatus = "";
+  // These magic numbers are based on the corresponding database constraint
+  if (title.length > 10_000) {
+    lengthIndicatorStatus = "error";
+  } else if (title.length >= 9_500) {
+    lengthIndicatorStatus = "warning";
+  }
 
   async function handleSave() {
     setSaving(true);
@@ -203,6 +211,13 @@ export function EditHangoutPage() {
         onChange={setTitle}
         placeholder="e.g. We walked to the park"
       />
+      <Text
+        as="div"
+        className={"length-indicator " + lengthIndicatorStatus}
+        size="1"
+      >
+        {title.length}
+      </Text>
 
       <Heading as="h2" size="3">
         When

@@ -14,6 +14,22 @@ export default styled.div`
     max-height: 100px;
   }
 
+  .length-indicator {
+    margin-top: 2px;
+    text-align: right;
+
+    color: var(--gray-11);
+
+    &.warning {
+      color: var(--amber-11);
+    }
+
+    &.error {
+      color: var(--red-9);
+      font-weight: bold;
+    }
+  }
+
   .checkbox-container {
     display: flex;
 
