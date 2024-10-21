@@ -189,7 +189,13 @@ export function EditHangoutPage() {
         })}
         value={friends}
         options={selectOptions}
+        onKeyDown={(event) => {
+          console.log(event.key);
+        }}
         onChange={setFriends}
+        onInputChange={(newString) => {
+          console.log(">", newString);
+        }}
         tabSelectsValue={false}
         components={{ Input }}
         styles={{
