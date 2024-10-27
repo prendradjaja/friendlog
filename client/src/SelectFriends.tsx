@@ -13,7 +13,7 @@ interface KnownSelectOption {
 }
 
 interface NewSelectOption {
-  __isNew__: false;
+  __isNew__: true;
   value: string;
   label: string;
 }
@@ -30,17 +30,25 @@ const Input = (props: InputProps<SelectOption>) => {
 };
 
 interface Props {
+  autoFocus: boolean;
   allFriends: Friend[];
   initialValue: Value;
+  friends: Value;
   onChange: (value: Value) => void;
 }
 
-interface Value {
-  existingFriendIds: number[];
-  newFriendNames: string[];
-}
+// interface Value {
+//   existingFriendIds: number[];
+//   newFriendNames: string[];
+// }
 
-export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
+export function SelectFriends({
+  autoFocus,
+  allFriends,
+  initialValue,
+  friends,
+  onChange,
+}: Props) {
   const friendsAlphabetical = sortBy(allFriends, (x) => x.name);
   const selectOptions = friendsAlphabetical.map(
     (friend) =>
@@ -55,21 +63,34 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
   const defaultSelectValue = selectOptions.filter((option) =>
     initialValue.existingFriendIds.includes(option.friend.id),
   );
-  const [friends, setFriends] =
-    useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
+
+  // const [friends, setFriends] =
+  //   useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
 
   function handleChange(newValue: readonly SelectOption[]) {
-    setFriends(newValue);
+    // const existingFriendIds = friends
+    //   .filter((option): option is KnownSelectOption => !option.__isNew__)
+    //   .map((option) => option.friend.id);
+    // const newFriendNames = friends
+    //   .filter((option): option is NewSelectOption => option.__isNew__)
+    //   .map((option) => option.value);
+    // const newValue2: Value = {
+    //   existingFriendIds,
+    //   newFriendNames,
+    // };
+
+    // setFriends(newValue);
+
     // CONTINUE_HERE: newValue needs to be mapped to type Value (see commented-out code in EditHangoutPage.handleSave)
     // - You'll also need to uncomment <SelectFriends> in EditHangoutPage
     // - Which will also require adding an onChange over there
     // - Does it matter which order we call setFriends and onChange?
-    onChange(newValue);
+    onChange(newValue2);
   }
 
   return (
     <CreatableSelect
-      autoFocus={mode === "create"}
+      autoFocus={autoFocus}
       closeMenuOnSelect={false}
       blurInputOnSelect={false}
       isMulti
@@ -77,7 +98,7 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
       filterOption={createFilter({
         matchFrom: "start",
       })}
-      value={friends}
+      value={value}
       options={selectOptions}
       onChange={handleChange}
       tabSelectsValue={false}

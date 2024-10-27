@@ -134,10 +134,12 @@ export function EditHangoutPage() {
       <Heading as="h2" size="3">
         Who
       </Heading>
-      {/* <SelectFriends
+      <SelectFriends
+        autoFocus={mode === "create"}
         allFriends={allFriends}
         initialValue={initialSelectValue}
-      /> */}
+        onChange={() => {}}
+      />
 
       <Heading as="h2" size="3">
         What
