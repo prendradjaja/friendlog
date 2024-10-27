@@ -23,13 +23,11 @@ const weekdaysShort = {
   6: "Sat",
 } as const;
 
-// todo Rename to NaiveDate
-export interface NaiveDateTuple {
+export interface NaiveDate {
   year: number;
   month: number; // 1-indexed
   day: number;
 }
-export type NaiveDate = NaiveDateTuple; // todo Remove after I rename existing usages
 
 export function getToday(): string {
   const now = new Date();
@@ -42,16 +40,13 @@ export function getToday(): string {
 // Format the given "timezone-naive" date relative to the browser's current date.
 export function formatRelative(
   naiveDateString: string,
-  fakeToday?: NaiveDateTuple, // For unit testing
+  fakeToday?: NaiveDate, // For unit testing
 ): string {
-  function toDate(date: NaiveDateTuple): Date {
+  function toDate(date: NaiveDate): Date {
     return new Date(Date.UTC(date.year, date.month - 1, date.day));
   }
 
-  function isPreviousMonth(
-    date1: NaiveDateTuple,
-    date2: NaiveDateTuple,
-  ): boolean {
+  function isPreviousMonth(date1: NaiveDate, date2: NaiveDate): boolean {
     if (date1.year === date2.year && date1.month === date2.month - 1) {
       return true;
     } else if (
@@ -65,7 +60,7 @@ export function formatRelative(
     }
   }
 
-  function getMonthLength(date: NaiveDateTuple): number {
+  function getMonthLength(date: NaiveDate): number {
     // Because NaiveDateTuple is 1-indexed and Date is 0-indexed, nextMonth is simply the following.
     // This works even if date.month === 12; Date constructor parameters are allowed to overflow and
     // "carry over."
@@ -75,8 +70,8 @@ export function formatRelative(
 
   // Returns the difference if the dates are close enough. Otherwise return undefined.
   function maybeDifference(
-    date1: NaiveDateTuple,
-    date2: NaiveDateTuple,
+    date1: NaiveDate,
+    date2: NaiveDate,
   ): number | undefined {
     if (
       date1.year === date2.year &&
@@ -99,7 +94,7 @@ export function formatRelative(
   const fakeUTCDate = toDate(date);
 
   const now = new Date();
-  const today: NaiveDateTuple = fakeToday ?? {
+  const today: NaiveDate = fakeToday ?? {
     year: now.getFullYear(),
     month: now.getMonth() + 1,
     day: now.getDate(),

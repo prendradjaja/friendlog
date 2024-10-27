@@ -1,11 +1,11 @@
 // todo Add a testing library
 
-import { formatRelative, NaiveDateTuple } from "./date-util";
+import { formatRelative, NaiveDate } from "./date-util";
 
 const wedSep25 = { year: 2024, month: 9, day: 25 };
 const tueOct1 = { year: 2024, month: 10, day: 1 };
 
-const testCases: [string, NaiveDateTuple, string][] = [
+const testCases: [string, NaiveDate, string][] = [
   // Within the past 8 days
   ["2024-09-25", wedSep25, "Today"],
   ["2024-09-24", wedSep25, "Yesterday"],
@@ -33,11 +33,7 @@ function main() {
   testCases.forEach((testCase) => runTestCase(...testCase));
 }
 
-function runTestCase(
-  input: string,
-  today: NaiveDateTuple,
-  expected: string,
-): void {
+function runTestCase(input: string, today: NaiveDate, expected: string): void {
   const actual = formatRelative(input, today);
   if (actual === expected) {
     console.log("- Pass");
