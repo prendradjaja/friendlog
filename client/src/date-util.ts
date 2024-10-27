@@ -1,3 +1,8 @@
+// This is basically a homegrown naive date library
+// Consider using a pre-built one
+// - If Date() methods only, maybe use https://github.com/chaitanyagupta/naive-date
+// - If want more, maybe use date-fns/utc: https://github.com/date-fns/utc
+
 const weekdays = {
   0: "Sunday",
   1: "Monday",
