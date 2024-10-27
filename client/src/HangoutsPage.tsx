@@ -17,6 +17,7 @@ import { useMemo } from "react";
 import { useEncryptionKey, useIsUnlocked } from "./local-storage-items";
 import { KeyboardListener } from "./KeyboardListener";
 import { NavMenu } from "./NavMenu";
+import { Calendar } from "./Calendar";
 
 interface LoaderData {
   hangouts: Hangout[];
@@ -62,6 +63,8 @@ export function HangoutsPage() {
         </Heading>
         <NavMenu />
       </div>
+
+      <Calendar hangouts={visibleHangouts} />
 
       <div>
         {visibleHangouts.map((hangout) => (
