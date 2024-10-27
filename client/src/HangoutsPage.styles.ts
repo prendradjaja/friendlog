@@ -12,6 +12,10 @@ export default styled.div`
     }
   }
 
+  .calendar {
+    margin-bottom: var(--space-3);
+  }
+
   .hangout-card:not(:last-child) {
     margin-bottom: var(--space-3);
   }

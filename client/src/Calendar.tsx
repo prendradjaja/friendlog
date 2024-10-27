@@ -28,7 +28,7 @@ export function Calendar({ hangouts }: Props) {
   }
 
   return (
-    <StyleWrapper>
+    <StyleWrapper className="calendar">
       {weekStarts.map((weekStart) => (
         <div className="week" key={toUniqueId(weekStart)}>
           {getDaysInWeek(weekStart).map((day) => (
