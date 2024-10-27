@@ -18,11 +18,13 @@ const weekdaysShort = {
   6: "Sat",
 } as const;
 
+// todo Rename to NaiveDate
 export interface NaiveDateTuple {
   year: number;
   month: number; // 1-indexed
   day: number;
 }
+export type NaiveDate = NaiveDateTuple; // todo Remove after I rename existing usages
 
 export function getToday(): string {
   const now = new Date();
@@ -37,15 +39,6 @@ export function formatRelative(
   naiveDateString: string,
   fakeToday?: NaiveDateTuple, // For unit testing
 ): string {
-  function parse(dateString: string): NaiveDateTuple {
-    const [year, month, day] = dateString.split("-");
-    return {
-      year: +year,
-      month: +month,
-      day: +day,
-    };
-  }
-
   function toDate(date: NaiveDateTuple): Date {
     return new Date(Date.UTC(date.year, date.month - 1, date.day));
   }
@@ -123,4 +116,67 @@ export function formatRelative(
   } else {
     return basicFormat;
   }
+}
+
+export function parse(dateString: string): NaiveDate {
+  const [year, month, day] = dateString.split("-");
+  return {
+    year: +year,
+    month: +month,
+    day: +day,
+  };
+}
+
+// @gx
+export function addDays(d: NaiveDate, n: number): NaiveDate {
+  const date = new Date(d.year, d.month - 1, d.day);
+  date.setDate(date.getDate() + n);
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+}
+
+// @gx
+export function getWeekStart(d: NaiveDate): NaiveDate {
+  const date = new Date(d.year, d.month - 1, d.day);
+
+  const dayOfWeek = date.getDay();
+  const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  date.setDate(date.getDate() - daysToMonday);
+
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+}
+
+export function format(d: NaiveDate): string {
+  return `${d.month}/${d.day}`;
+}
+
+export function getTodayObject(): NaiveDate {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  return { year, month, day };
+}
+
+export function getDateRange(start: NaiveDate, stop: NaiveDate, step = 1) {
+  const result: NaiveDate[] = [];
+  for (let d = start; !equals(d, stop); d = addDays(d, step)) {
+    result.push({ ...d });
+  }
+  return result;
+}
+
+function equals(date1: NaiveDate, date2: NaiveDate): boolean {
+  return (
+    date1.year === date2.year &&
+    date1.month === date2.month &&
+    date1.day === date2.day
+  );
 }
