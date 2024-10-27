@@ -17,6 +17,7 @@ import {
   encryptFriendUpdate,
   encryptHangoutUpdate,
 } from "./encryption/encrypt-data";
+import { prodHangouts } from "./hangouts";
 
 const encryptionKey = getEncryptionKeySnapshot();
 
@@ -75,8 +76,8 @@ export function updateFriend(
 }
 
 export async function getMyHangouts(): Promise<Hangout[]> {
-  const hangouts = await myFetch<Hangout[]>("/api/me/hangouts");
-  return hangouts.map((hangout) => decryptHangout(hangout, encryptionKey));
+  const hangouts = prodHangouts as any;
+  return hangouts.map((hangout: any) => decryptHangout(hangout, encryptionKey));
 }
 
 export async function getMyHangoutsWithOneFriend(
