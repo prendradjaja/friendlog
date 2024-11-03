@@ -13,7 +13,7 @@ interface KnownSelectOption {
 }
 
 interface NewSelectOption {
-  __isNew__: true;
+  __isNew__: false;
   value: string;
   label: string;
 }
@@ -30,25 +30,17 @@ const Input = (props: InputProps<SelectOption>) => {
 };
 
 interface Props {
-  autoFocus: boolean;
   allFriends: Friend[];
   initialValue: Value;
-  friends: Value;
   onChange: (value: Value) => void;
 }
 
-// interface Value {
-//   existingFriendIds: number[];
-//   newFriendNames: string[];
-// }
+interface Value {
+  existingFriendIds: number[];
+  newFriendNames: string[];
+}
 
-export function SelectFriends({
-  autoFocus,
-  allFriends,
-  initialValue,
-  friends,
-  onChange,
-}: Props) {
+export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
   const friendsAlphabetical = sortBy(allFriends, (x) => x.name);
   const selectOptions = friendsAlphabetical.map(
     (friend) =>
@@ -63,34 +55,21 @@ export function SelectFriends({
   const defaultSelectValue = selectOptions.filter((option) =>
     initialValue.existingFriendIds.includes(option.friend.id),
   );
-
-  // const [friends, setFriends] =
-  //   useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
+  const [friends, setFriends] =
+    useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
 
   function handleChange(newValue: readonly SelectOption[]) {
-    // const existingFriendIds = friends
-    //   .filter((option): option is KnownSelectOption => !option.__isNew__)
-    //   .map((option) => option.friend.id);
-    // const newFriendNames = friends
-    //   .filter((option): option is NewSelectOption => option.__isNew__)
-    //   .map((option) => option.value);
-    // const newValue2: Value = {
-    //   existingFriendIds,
-    //   newFriendNames,
-    // };
-
-    // setFriends(newValue);
-
+    setFriends(newValue);
     // CONTINUE_HERE: newValue needs to be mapped to type Value (see commented-out code in EditHangoutPage.handleSave)
     // - You'll also need to uncomment <SelectFriends> in EditHangoutPage
     // - Which will also require adding an onChange over there
     // - Does it matter which order we call setFriends and onChange?
-    onChange(newValue2);
+    onChange(newValue);
   }
 
   return (
     <CreatableSelect
-      autoFocus={autoFocus}
+      autoFocus={mode === "create"}
       closeMenuOnSelect={false}
       blurInputOnSelect={false}
       isMulti
@@ -98,7 +77,7 @@ export function SelectFriends({
       filterOption={createFilter({
         matchFrom: "start",
       })}
-      value={value}
+      value={friends}
       options={selectOptions}
       onChange={handleChange}
       tabSelectsValue={false}
