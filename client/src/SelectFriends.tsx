@@ -13,12 +13,13 @@ interface KnownSelectOption {
 }
 
 interface NewSelectOption {
-  __isNew__: false;
+  __isNew__: true;
   value: string;
   label: string;
 }
 
 type SelectOption = KnownSelectOption | NewSelectOption;
+type ReactSelectValueType = readonly SelectOption[];
 
 const colors = {
   reactSelectLightBlue: "hsl(216 100 92)",
@@ -35,12 +36,72 @@ interface Props {
   onChange: (value: Value) => void;
 }
 
-interface Value {
+export interface Value {
   existingFriendIds: number[];
   newFriendNames: string[];
 }
 
 export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
+  return (
+    <SelectFriendsInternal
+      allFriends={allFriends}
+      initialValue={toReactSelectValueType(initialValue, allFriends)}
+      onChange={(value) => onChange(fromReactSelectValueType(value))}
+    />
+  );
+}
+
+interface SelectFriendsInternal {
+  allFriends: Friend[];
+  initialValue: ReactSelectValueType;
+  onChange: (value: ReactSelectValueType) => void;
+}
+
+function fromReactSelectValueType(friends: ReactSelectValueType): Value {
+  const existingFriendIds = friends
+    .filter((option): option is KnownSelectOption => !option.__isNew__)
+    .map((option) => option.friend.id);
+  const newFriendNames = friends
+    .filter((option): option is NewSelectOption => option.__isNew__)
+    .map((option) => option.value);
+
+  return {
+    existingFriendIds,
+    newFriendNames,
+  };
+}
+
+function toReactSelectValueType(
+  value: Value,
+  allFriends: Friend[],
+): ReactSelectValueType {
+  if (value.newFriendNames.length) {
+    throw new Error(
+      'toReactSelectValueType only expected to handle the "all existing friends" case',
+    );
+  }
+  const allFriendsById: Partial<Record<number, Friend>> = {};
+  for (const friend of allFriends) {
+    allFriendsById[friend.id] = friend;
+  }
+
+  // ptodo alphabetize
+  return value.existingFriendIds.map(
+    (friendId) =>
+      ({
+        __isNew__: false,
+        value: friendId,
+        label: allFriendsById[friendId]!.name,
+        friend: allFriendsById[friendId]!,
+      }) satisfies KnownSelectOption,
+  );
+}
+
+function SelectFriendsInternal({
+  allFriends,
+  initialValue,
+  onChange,
+}: SelectFriendsInternal) {
   const friendsAlphabetical = sortBy(allFriends, (x) => x.name);
   const selectOptions = friendsAlphabetical.map(
     (friend) =>
@@ -51,15 +112,16 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
         friend,
       }) satisfies KnownSelectOption,
   );
+  const [value, setValue] = useState(initialValue);
 
-  const defaultSelectValue = selectOptions.filter((option) =>
-    initialValue.existingFriendIds.includes(option.friend.id),
-  );
-  const [friends, setFriends] =
-    useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
+  // const defaultSelectValue = selectOptions.filter((option) =>
+  //   initialValue.existingFriendIds.includes(option.friend.id),
+  // );
+  // const [friends, setFriends] =
+  //   useState<readonly SelectOption[]>(defaultSelectValue); // todo Rename to value maybe
 
   function handleChange(newValue: readonly SelectOption[]) {
-    setFriends(newValue);
+    // setFriends(newValue);
     // CONTINUE_HERE: newValue needs to be mapped to type Value (see commented-out code in EditHangoutPage.handleSave)
     // - You'll also need to uncomment <SelectFriends> in EditHangoutPage
     // - Which will also require adding an onChange over there
@@ -68,16 +130,19 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
   }
 
   // autoFocus={mode === "create"}
+
+  // // ptodo Maybe use controlled component?
+  // value={friends}
+
   return (
     <CreatableSelect
       closeMenuOnSelect={false}
       blurInputOnSelect={false}
       isMulti
-      defaultValue={defaultSelectValue}
+      defaultValue={initialValue}
       filterOption={createFilter({
         matchFrom: "start",
       })}
-      value={friends}
       options={selectOptions}
       onChange={handleChange}
       tabSelectsValue={false}

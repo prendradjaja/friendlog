@@ -14,7 +14,7 @@ import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
 import { encodeNewlines, decodeNewlines } from "./encode-newlines";
 import { KeyboardListener } from "./KeyboardListener";
-import { SelectFriends } from "./SelectFriends";
+import { SelectFriends, Value } from "./SelectFriends";
 
 type LoaderData = Prettify<
   {
@@ -45,6 +45,7 @@ export function EditHangoutPage() {
     existingFriendIds: hangoutFriendIds,
     newFriendNames: [],
   };
+  const [who, setWho] = useState<Value>(initialSelectValue);
 
   const dateRef = useRef<HTMLInputElement>(null);
   const [isPrivate, setIsPrivate] = useState(hangout ? hangout.private : false);
@@ -58,24 +59,17 @@ export function EditHangoutPage() {
   async function handleSave() {
     setSaving(true);
 
-    // const existingFriendIds = friends
-    //   .filter((option): option is KnownSelectOption => !option.__isNew__)
-    //   .map((option) => option.friend.id);
-    // const friendNamesToCreate = friends
-    //   .filter((option): option is NewSelectOption => option.__isNew__)
-    //   .map((option) => option.value);
+    const { existingFriendIds, newFriendNames } = who;
     const hangout_date_string = dateRef.current!.value;
 
-    // // todo Can add a bulk-create endpoint or just parallelize
-    // const createdFriendIds: number[] = [];
-    // for (const name of friendNamesToCreate) {
-    //   const { id } = await api.createMyFriend({ name });
-    //   createdFriendIds.push(id);
-    // }
+    // todo Can add a bulk-create endpoint or just parallelize
+    const createdFriendIds: number[] = [];
+    for (const name of newFriendNames) {
+      const { id } = await api.createMyFriend({ name });
+      createdFriendIds.push(id);
+    }
 
-    // const friendIds = [...existingFriendIds, ...createdFriendIds];
-
-    const friendIds: number[] = [];
+    const friendIds = [...existingFriendIds, ...createdFriendIds];
 
     const payload = {
       title: encodeNewlines(title),
@@ -134,10 +128,12 @@ export function EditHangoutPage() {
       <Heading as="h2" size="3">
         Who
       </Heading>
-      {/* <SelectFriends
+      {/* TODO Add onChange and un-disable the save button */}
+      <SelectFriends
         allFriends={allFriends}
         initialValue={initialSelectValue}
-      /> */}
+        onChange={setWho}
+      />
 
       <Heading as="h2" size="3">
         What
