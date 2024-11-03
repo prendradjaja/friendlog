@@ -67,9 +67,9 @@ export function SelectFriends({ allFriends, initialValue, onChange }: Props) {
     onChange(newValue);
   }
 
+  // autoFocus={mode === "create"}
   return (
     <CreatableSelect
-      autoFocus={mode === "create"}
       closeMenuOnSelect={false}
       blurInputOnSelect={false}
       isMulti
