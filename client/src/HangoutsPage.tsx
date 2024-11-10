@@ -49,6 +49,8 @@ export function HangoutsPage() {
       !event.shiftKey
     ) {
       navigate(createHangoutUrl);
+    } else if (event.key === "L") {
+      saveIsUnlocked(!isUnlocked);
     }
   }
 
