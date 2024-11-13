@@ -16,6 +16,9 @@ export function NavMenu() {
           <DropdownMenu.Item asChild>
             <RouterLink to="/settings">Settings</RouterLink>
           </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <RouterLink to="/statistics">Statistics</RouterLink>
+          </DropdownMenu.Item>
           <form method="post" action="/logout">
             <DropdownMenu.Item asChild>
               <button type="submit">Log out</button>

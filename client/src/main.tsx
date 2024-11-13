@@ -9,6 +9,7 @@ import { EditFriendPage } from "./EditFriendPage";
 import { DevtoolsPage } from "./DevtoolsPage";
 import { SettingsPage } from "./SettingsPage";
 import { SandboxPage } from "./SandboxPage";
+import { StatisticsPage } from "./StatisticsPage";
 import { EditHangoutPage } from "./EditHangoutPage";
 import { Theme } from "@radix-ui/themes";
 
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
   {
     path: "/settings",
     element: <SettingsPage />,
+  },
+  {
+    path: "/statistics",
+    element: <StatisticsPage />,
+    loader: StatisticsPage.loader,
   },
   {
     path: "/devtools",
