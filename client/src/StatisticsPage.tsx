@@ -28,6 +28,12 @@ export function StatisticsPage() {
       Total hangouts: {hangouts.length}
       <hr />
       <table>
+        <thead>
+          <tr>
+            <th>Friend</th>
+            <th>Hangouts</th>
+          </tr>
+        </thead>
         <tbody>
           {friendsByCount.map(([friend, count]) => (
             <tr key={friend}>
