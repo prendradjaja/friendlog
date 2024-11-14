@@ -25,6 +25,8 @@ export function StatisticsPage() {
   return (
     <StyleWrapper>
       <Heading>Statistics</Heading>
+      Total hangouts: {hangouts.length}
+      <hr />
       <table>
         <tbody>
           {friendsByCount.map(([friend, count]) => (
