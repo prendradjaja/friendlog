@@ -9,14 +9,12 @@ import {
 import StyleWrapper from "./EditHangoutPage.styles";
 import { Button, Heading, TextField, Text, TextProps } from "@radix-ui/themes";
 import { getToday } from "./date-util";
-import CreatableSelect from "react-select/creatable";
-import { InputProps, components, createFilter } from "react-select";
 import { UnreachableCaseError, Prettify } from "ts-essentials";
 import { isValidationError } from "shared/validators";
 import { GrowableTextarea } from "./GrowableTextarea";
 import { encodeNewlines, decodeNewlines } from "./encode-newlines";
-import { sortBy } from "./util";
 import { KeyboardListener } from "./KeyboardListener";
+import { SelectFriends, Value } from "./SelectFriends";
 
 type LoaderData = Prettify<
   {
@@ -34,55 +32,20 @@ type LoaderData = Prettify<
   )
 >;
 
-// todo Move Select stuff into a separate component?
-interface KnownSelectOption {
-  __isNew__: false;
-  value: number;
-  label: string;
-  friend: Friend;
-}
-
-interface NewSelectOption {
-  __isNew__: false;
-  value: string;
-  label: string;
-}
-
-type SelectOption = KnownSelectOption | NewSelectOption;
-
-const colors = {
-  reactSelectLightBlue: "hsl(216 100 92)",
-  radixIndigo5: "#D2DEFF",
-} as const;
-
-const Input = (props: InputProps<SelectOption>) => {
-  return <components.Input {...props} enterKeyHint="enter" />;
-};
-
 export function EditHangoutPage() {
   const loaderData = useLoaderData() as LoaderData;
   const { allFriends, hangout, mode } = loaderData;
   const [title, setTitle] = useState(
     hangout ? decodeNewlines(hangout.title) : "",
   );
-  const friendsAlphabetical = sortBy(allFriends, (x) => x.name);
-  const selectOptions = friendsAlphabetical.map(
-    (friend) =>
-      ({
-        __isNew__: false,
-        value: friend.id,
-        label: friend.name,
-        friend,
-      }) satisfies KnownSelectOption,
-  );
   const hangoutFriendIds = hangout
     ? hangout.friends.map((friend) => friend.id)
     : [];
-  const defaultSelectValue = selectOptions.filter((option) =>
-    hangoutFriendIds.includes(option.friend.id),
-  );
-  const [friends, setFriends] =
-    useState<readonly SelectOption[]>(defaultSelectValue);
+  const initialSelectValue = {
+    existingFriendIds: hangoutFriendIds,
+    newFriendNames: [],
+  };
+  const [who, setWho] = useState<Value>(initialSelectValue);
 
   const dateRef = useRef<HTMLInputElement>(null);
   const [isPrivate, setIsPrivate] = useState(hangout ? hangout.private : false);
@@ -104,17 +67,12 @@ export function EditHangoutPage() {
   async function handleSave() {
     setSaving(true);
 
-    const existingFriendIds = friends
-      .filter((option): option is KnownSelectOption => !option.__isNew__)
-      .map((option) => option.friend.id);
-    const friendNamesToCreate = friends
-      .filter((option): option is NewSelectOption => option.__isNew__)
-      .map((option) => option.value);
+    const { existingFriendIds, newFriendNames } = who;
     const hangout_date_string = dateRef.current!.value;
 
     // todo Can add a bulk-create endpoint or just parallelize
     const createdFriendIds: number[] = [];
-    for (const name of friendNamesToCreate) {
+    for (const name of newFriendNames) {
       const { id } = await api.createMyFriend({ name });
       createdFriendIds.push(id);
     }
@@ -178,29 +136,11 @@ export function EditHangoutPage() {
       <Heading as="h2" size="3">
         Who
       </Heading>
-      <CreatableSelect
-        autoFocus={mode === "create"}
-        closeMenuOnSelect={false}
-        blurInputOnSelect={false}
-        isMulti
-        defaultValue={defaultSelectValue}
-        filterOption={createFilter({
-          matchFrom: "start",
-        })}
-        value={friends}
-        options={selectOptions}
-        onChange={setFriends}
-        tabSelectsValue={false}
-        components={{ Input }}
-        styles={{
-          multiValue: (providedStyles, props) => ({
-            ...providedStyles,
-            backgroundColor: props.data.__isNew__
-              ? colors.reactSelectLightBlue
-              : providedStyles.backgroundColor,
-            fontStyle: props.data.__isNew__ ? "italic" : "normal",
-          }),
-        }}
+      {/* TODO Add onChange and un-disable the save button */}
+      <SelectFriends
+        allFriends={allFriends}
+        initialValue={initialSelectValue}
+        onChange={setWho}
       />
 
       <Heading as="h2" size="3">
